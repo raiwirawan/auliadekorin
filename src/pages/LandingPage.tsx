@@ -2,6 +2,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Heart, Calendar, Music, Clock, ChevronRight, Sparkles } from 'lucide-react';
+import FirstSection from '../components/FirstSection';
+import SecondSection from '../components/SecondSection';
+import ThirdSection from '../components/ThirdSection';
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -61,6 +64,10 @@ export default function LandingPage() {
           </motion.div>
         </div>
       </section>
+
+      <FirstSection />
+      <SecondSection />
+      <ThirdSection />
 
       {/* Features Grid */}
       <section className="py-32 bg-neutral-50">
