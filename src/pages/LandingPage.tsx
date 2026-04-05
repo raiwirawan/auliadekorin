@@ -14,7 +14,7 @@ export default function LandingPage() {
       {/* Navbar */}
       <nav className="p-6 flex justify-between items-center max-w-7xl mx-auto">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white font-bold text-xl">E</div>
+          <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white font-bold text-xl"><img src="/favicon.svg" alt="" /></div>
           <span className="font-bold text-2xl tracking-tighter">Everlasting</span>
         </div>
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-neutral-500">
