@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Wedding, THEMES, MUSIC_TRACKS } from '../types';
 import WeddingPageView from '../components/WeddingPageView';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronRight, ChevronLeft, Send, Eye, Edit3, CheckCircle, Copy } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Send, Eye, Edit3, CheckCircle, Copy, Upload, Link, Loader2, X } from 'lucide-react';
+import { uploadHeroImage } from '../utils/uploadImage';
 
 export default function CreatePage() {
   const navigate = useNavigate();
@@ -11,6 +12,33 @@ export default function CreatePage() {
   const [isPublishing, setIsPublishing] = useState(false);
   const [publishedSlug, setPublishedSlug] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [heroInputMode, setHeroInputMode] = useState<'upload' | 'url'>('upload');
+  const [isUploadingHero, setIsUploadingHero] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Please select a valid image file.');
+      return;
+    }
+    setIsUploadingHero(true);
+    setUploadError(null);
+    try {
+      const publicUrl = await uploadHeroImage(file);
+      setFormData(prev => ({ ...prev, heroImage: publicUrl }));
+    } catch (err: any) {
+      setUploadError(err.message || 'Failed to upload image.');
+    } finally {
+      setIsUploadingHero(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (file) handleFileUpload(file);
+  };
 
   const [formData, setFormData] = useState<Wedding>({
     brideName: '',
@@ -244,15 +272,110 @@ export default function CreatePage() {
                       onChange={e => setFormData({...formData, loveStory: e.target.value})}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold uppercase tracking-wider text-neutral-400">Hero Image URL</label>
-                    <input 
-                      type="url" 
-                      placeholder="https://images.unsplash.com/..."
-                      className="w-full p-4 bg-neutral-50 rounded-xl border border-neutral-100 focus:ring-2 focus:ring-black outline-none transition-all"
-                      value={formData.heroImage}
-                      onChange={e => setFormData({...formData, heroImage: e.target.value})}
-                    />
+                  <div className="space-y-3">
+                    <label className="text-sm font-bold uppercase tracking-wider text-neutral-400">Hero Image</label>
+
+                    {/* Mode Tabs */}
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setHeroInputMode('upload')}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                          heroInputMode === 'upload'
+                            ? 'bg-black text-white'
+                            : 'bg-neutral-100 text-neutral-500 hover:bg-neutral-200'
+                        }`}
+                      >
+                        <Upload className="w-4 h-4" /> Upload File
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setHeroInputMode('url')}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                          heroInputMode === 'url'
+                            ? 'bg-black text-white'
+                            : 'bg-neutral-100 text-neutral-500 hover:bg-neutral-200'
+                        }`}
+                      >
+                        <Link className="w-4 h-4" /> Image URL
+                      </button>
+                    </div>
+
+                    {/* Upload Mode */}
+                    {heroInputMode === 'upload' && (
+                      <div className="space-y-3">
+                        <div
+                          onDragOver={e => e.preventDefault()}
+                          onDrop={handleDrop}
+                          onClick={() => fileInputRef.current?.click()}
+                          className={`relative flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed rounded-xl cursor-pointer transition-all ${
+                            isUploadingHero
+                              ? 'border-neutral-300 bg-neutral-50'
+                              : 'border-neutral-200 hover:border-black hover:bg-neutral-50'
+                          }`}
+                        >
+                          {isUploadingHero ? (
+                            <>
+                              <Loader2 className="w-8 h-8 text-neutral-400 animate-spin" />
+                              <span className="text-sm text-neutral-500">Uploading...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="w-8 h-8 text-neutral-400" />
+                              <div className="text-center">
+                                <span className="text-sm font-medium text-neutral-700">Click to upload</span>
+                                <span className="text-sm text-neutral-400"> or drag and drop</span>
+                              </div>
+                              <span className="text-xs text-neutral-400">PNG, JPG, WebP up to 10MB</span>
+                            </>
+                          )}
+                          <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={e => {
+                              const file = e.target.files?.[0];
+                              if (file) handleFileUpload(file);
+                              e.target.value = '';
+                            }}
+                          />
+                        </div>
+                        {uploadError && (
+                          <p className="text-xs text-red-500">{uploadError}</p>
+                        )}
+                      </div>
+                    )}
+
+                    {/* URL Mode */}
+                    {heroInputMode === 'url' && (
+                      <input
+                        type="url"
+                        placeholder="https://images.unsplash.com/..."
+                        className="w-full p-4 bg-neutral-50 rounded-xl border border-neutral-100 focus:ring-2 focus:ring-black outline-none transition-all"
+                        value={formData.heroImage}
+                        onChange={e => setFormData({ ...formData, heroImage: e.target.value })}
+                      />
+                    )}
+
+                    {/* Image Preview */}
+                    {formData.heroImage && (
+                      <div className="relative rounded-xl overflow-hidden border border-neutral-200">
+                        <img
+                          src={formData.heroImage}
+                          alt="Hero preview"
+                          className="w-full h-40 object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, heroImage: '' })}
+                          className="absolute top-2 right-2 p-1.5 bg-black/60 hover:bg-black/80 rounded-full text-white transition-colors"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+
                     <p className="text-xs text-neutral-400">Tip: Use a high-quality landscape photo for the best look.</p>
                   </div>
                 </div>

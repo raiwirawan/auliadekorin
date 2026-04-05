@@ -2,6 +2,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Heart, Calendar, Music, Clock, ChevronRight, Sparkles } from 'lucide-react';
+import FirstSection from '../components/FirstSection';
+import SecondSection from '../components/SecondSection';
+import ThirdSection from '../components/ThirdSection';
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -11,7 +14,7 @@ export default function LandingPage() {
       {/* Navbar */}
       <nav className="p-6 flex justify-between items-center max-w-7xl mx-auto">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white font-bold text-xl">E</div>
+          <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white font-bold text-xl"><img src="/favicon.svg" alt="" /></div>
           <span className="font-bold text-2xl tracking-tighter">Everlasting</span>
         </div>
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-neutral-500">
@@ -61,6 +64,10 @@ export default function LandingPage() {
           </motion.div>
         </div>
       </section>
+
+      <FirstSection />
+      <SecondSection />
+      <ThirdSection />
 
       {/* Features Grid */}
       <section className="py-32 bg-neutral-50">
