@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence, useMotionValue, animate } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
 
 // ─── Google Font injection (Playfair Display + DM Sans) ───────────────────────
@@ -261,7 +261,6 @@ function TestimonialCard({
 export default function TestimonialsSlider() {
   const [current, setCurrent] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const dragX = useMotionValue(0);
   const DRAG_THRESHOLD = 60;
   const total = testimonials.length;
 
@@ -344,7 +343,7 @@ export default function TestimonialsSlider() {
 
             return (
               <motion.div
-                key={`${t.id}-${slot}`}
+                key={slot}
                 className="absolute inset-0"
                 animate={{
                   x: props.x,
@@ -363,9 +362,8 @@ export default function TestimonialsSlider() {
                 drag={isActive ? 'x' : false}
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.08}
-                onDrag={(_, info) => dragX.set(info.offset.x)}
+                onDrag={(_, info) => { /* drag offset tracked internally by motion */ }}
                 onDragEnd={(_, info) => {
-                  dragX.set(0);
                   if (info.offset.x < -DRAG_THRESHOLD) go(1);
                   else if (info.offset.x > DRAG_THRESHOLD) go(-1);
                 }}

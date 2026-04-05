@@ -134,11 +134,13 @@ export default function MSMEGallerySlider() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const dragX = useMotionValue(0);
+  // dragProgress tracks drag offset only for arrow opacity hints — not bound to slide x
+  const dragProgress = useMotionValue(0);
+  const dragX = dragProgress; // alias kept so reset calls still work
 
   // Derived opacity for the drag-hint arrows
-  const leftArrowOpacity = useTransform(dragX, [-120, 0], [1, 0.4]);
-  const rightArrowOpacity = useTransform(dragX, [0, 120], [0.4, 1]);
+  const leftArrowOpacity = useTransform(dragProgress, [-120, 0], [1, 0.4]);
+  const rightArrowOpacity = useTransform(dragProgress, [0, 120], [0.4, 1]);
 
   const goTo = useCallback(
     (index: number, dir: 1 | -1 = 1) => {
@@ -148,8 +150,8 @@ export default function MSMEGallerySlider() {
     []
   );
 
-  const next = useCallback(() => goTo(current + 1, 1), [current, goTo]);
-  const prev = useCallback(() => goTo(current - 1, -1), [current, goTo]);
+  const next = useCallback(() => { dragX.set(0); goTo(current + 1, 1); }, [current, goTo, dragX]);
+  const prev = useCallback(() => { dragX.set(0); goTo(current - 1, -1); }, [current, goTo, dragX]);
 
   // Auto-play
   useEffect(() => {
@@ -220,11 +222,11 @@ export default function MSMEGallerySlider() {
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.12}
-          style={{ x: dragX }}
           onDragStart={() => setIsDragging(true)}
+          onDrag={(_, info) => dragProgress.set(info.offset.x)}
           onDragEnd={(_, info) => {
             setIsDragging(false);
-            dragX.set(0);
+            dragProgress.set(0);
             if (info.offset.x < -DRAG_THRESHOLD) next();
             else if (info.offset.x > DRAG_THRESHOLD) prev();
           }}
