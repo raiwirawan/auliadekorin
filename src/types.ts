@@ -1,6 +1,13 @@
+export interface User {
+  id: number;
+  email: string;
+}
+
 export interface Wedding {
   id?: number;
   slug?: string;
+  user_id?: number;
+  is_published?: number;
   brideName: string;
   groomName: string;
   date: string;
