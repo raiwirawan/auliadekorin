@@ -1,20 +1,24 @@
-import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Wedding, THEMES, MUSIC_TRACKS } from '../types';
 import WeddingPageView from '../components/WeddingPageView';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronRight, ChevronLeft, Send, Eye, Edit3, CheckCircle, Copy, Upload, Link, Loader2, X } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Send, Eye, Edit3, CheckCircle, Copy, Upload, Link, Loader2, X, LayoutDashboard } from 'lucide-react';
 import { uploadHeroImage } from '../utils/uploadImage';
+import { useAuth } from '../context/AuthContext';
 
 export default function CreatePage() {
   const navigate = useNavigate();
+  const { token } = useAuth();
   const [step, setStep] = useState(1);
   const [isPublishing, setIsPublishing] = useState(false);
   const [publishedSlug, setPublishedSlug] = useState<string | null>(null);
+  const [publishError, setPublishError] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [heroInputMode, setHeroInputMode] = useState<'upload' | 'url'>('upload');
   const [isUploadingHero, setIsUploadingHero] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [customSlug, setCustomSlug] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = async (file: File) => {
@@ -60,19 +64,25 @@ export default function CreatePage() {
 
   const handlePublish = async () => {
     setIsPublishing(true);
+    setPublishError(null);
     try {
       const res = await fetch('/api/weddings', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ ...formData, customSlug: customSlug.trim() || undefined })
       });
       const data = await res.json();
-      if (data.success) {
+      if (res.ok && data.success) {
         setPublishedSlug(data.slug);
+      } else {
+        setPublishError(data.error || 'Failed to publish wedding page.');
       }
     } catch (error) {
       console.error(error);
-      alert("Failed to publish wedding page.");
+      setPublishError('Network error. Please try again.');
     } finally {
       setIsPublishing(false);
     }
@@ -111,6 +121,12 @@ export default function CreatePage() {
               className="w-full py-4 bg-black text-white rounded-full font-bold hover:bg-neutral-800 transition-colors"
             >
               View My Page
+            </button>
+            <button 
+              onClick={() => navigate('/dashboard')}
+              className="w-full py-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full font-bold hover:bg-emerald-100 transition-colors flex items-center justify-center gap-2"
+            >
+              <LayoutDashboard className="w-5 h-5" /> Go to Dashboard
             </button>
             <button 
               onClick={() => navigate('/')}
@@ -486,6 +502,31 @@ export default function CreatePage() {
                       onChange={e => setFormData({...formData, rsvpDeadline: e.target.value})}
                     />
                   </div>
+
+                  {/* Custom URL Slug */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold uppercase tracking-wider text-neutral-400">Custom URL Slug <span className="normal-case text-neutral-300">(optional)</span></label>
+                    <div className="flex items-center bg-neutral-50 border border-neutral-100 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-black transition-all">
+                      <span className="pl-4 pr-2 text-sm text-neutral-400 whitespace-nowrap select-none">{window.location.host}/w/</span>
+                      <input
+                        id="custom-slug-input"
+                        type="text"
+                        placeholder={`${formData.brideName.toLowerCase() || 'bride'}-and-${formData.groomName.toLowerCase() || 'groom'}`}
+                        className="flex-1 py-4 pr-4 bg-transparent outline-none text-sm font-mono"
+                        value={customSlug}
+                        onChange={e => setCustomSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
+                      />
+                    </div>
+                    <p className="text-xs text-neutral-400">Leave blank to auto-generate. Only lowercase letters, numbers, and hyphens.</p>
+                  </div>
+
+                  {/* Publish error */}
+                  {publishError && (
+                    <div className="flex items-start gap-2 p-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm">
+                      <span className="mt-0.5">⚠️</span>
+                      <span>{publishError}</span>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}
