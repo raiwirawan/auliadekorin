@@ -1,13 +1,13 @@
 export interface User {
-  id: number;
+  id: string;
   email: string;
 }
 
 export interface Wedding {
-  id?: number;
+  id?: string;
   slug?: string;
-  user_id?: number;
-  is_published?: number;
+  user_id?: string;
+  is_published?: boolean;
   brideName: string;
   groomName: string;
   date: string;
@@ -26,8 +26,8 @@ export interface Wedding {
 }
 
 export interface RSVP {
-  id?: number;
-  weddingId: number;
+  id?: string;
+  weddingId: string;
   name: string;
   status: 'attending' | 'declined';
   guests: number;
