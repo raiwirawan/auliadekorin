@@ -176,7 +176,7 @@ export default function CreatePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col md:flex-row">
+    <div className="h-screen bg-white flex flex-col md:flex-row overflow-hidden">
       {/* Form Side */}
       <div className={`flex-1 flex flex-col h-screen overflow-y-auto bg-white ${showPreview ? 'hidden md:flex' : 'flex'}`}>
         <header className="p-6 border-b flex justify-between items-center sticky top-0 bg-white z-10">
@@ -448,7 +448,7 @@ export default function CreatePage() {
       </div>
 
       {/* Preview Side */}
-      <div className={`flex-1 bg-neutral-100 relative ${showPreview ? 'flex' : 'hidden md:flex'}`}>
+      <div className={`flex-1 bg-neutral-100 relative h-screen overflow-y-auto ${showPreview ? 'flex' : 'hidden md:flex'}`}>
         <button onClick={() => setShowPreview(false)} className="md:hidden absolute top-6 left-6 z-50 p-3 bg-white rounded-full shadow-lg">
           <Edit3 className="w-6 h-6" />
         </button>
