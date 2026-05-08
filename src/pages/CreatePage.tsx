@@ -453,8 +453,8 @@ export default function CreatePage() {
           <Edit3 className="w-6 h-6" />
         </button>
 
-        <div className="w-full h-full overflow-y-auto">
-          <div className="scale-[0.85] origin-top shadow-2xl rounded-[3rem] overflow-hidden border-12 border-neutral-800 my-12 mx-auto max-w-[450px] md:max-w-none md:w-[90%] md:h-[90%]">
+        <div className="w-full py-12 px-4">
+          <div className="scale-[0.85] origin-top shadow-2xl rounded-[3rem] overflow-hidden border-12 border-neutral-800 mx-auto max-w-[450px] md:w-[90%]">
             <WeddingPageView wedding={formData} isPreview />
           </div>
         </div>
