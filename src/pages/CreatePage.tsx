@@ -43,6 +43,24 @@ export default function CreatePage() {
 	const [isLoadingEdit, setIsLoadingEdit] = useState(isEditMode);
 	const [loadError, setLoadError] = useState<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
+	const previewPanelRef = useRef<HTMLDivElement>(null);
+	const [phoneScale, setPhoneScale] = useState(1);
+
+	// Auto-scale the phone preview to fit the right panel
+	useEffect(() => {
+		const panel = previewPanelRef.current;
+		if (!panel) return;
+		const PHONE_W = 390 + 24; // phone width + border
+		const PADDING = 64; // px-8 * 2
+		const computeScale = () => {
+			const available = panel.clientWidth - PADDING;
+			setPhoneScale(Math.min(1, available / PHONE_W));
+		};
+		computeScale();
+		const ro = new ResizeObserver(computeScale);
+		ro.observe(panel);
+		return () => ro.disconnect();
+	}, []);
 
 	// Load existing wedding data in edit mode
 	useEffect(() => {
@@ -884,9 +902,10 @@ export default function CreatePage() {
 				</footer>
 			</div>
 
-			{/* Preview Side — sticky viewport, phone frame scrolls its content */}
+			{/* Preview Side */}
 			<div
-				className={`flex-1 bg-neutral-100 relative h-screen overflow-y-auto ${showPreview ? "flex" : "hidden md:flex"}`}
+				ref={previewPanelRef}
+				className={`flex-1 bg-neutral-100 relative h-screen overflow-y-auto flex-col ${showPreview ? "flex" : "hidden md:flex"}`}
 			>
 				<button
 					onClick={() => setShowPreview(false)}
@@ -895,18 +914,40 @@ export default function CreatePage() {
 					<Edit3 className="w-6 h-6" />
 				</button>
 
-				{/* Phone frame wrapper — scrolls with the right panel */}
-				<div className="w-full min-h-full flex items-start justify-center py-10 px-6">
+				{/* Centering wrapper — gives the scaled phone its layout space */}
+				<div className="w-full min-h-full flex items-start justify-center py-10 px-8">
+					{/* Outer box reserves the scaled space so the panel scrolls correctly */}
 					<div
-						className="relative w-full shadow-2xl rounded-[2.5rem] border-10 border-neutral-800 overflow-hidden bg-neutral-800"
-						style={{ maxWidth: "340px" }}
+						style={{
+							width: 390 * phoneScale,
+							height: 780 * phoneScale,
+							flexShrink: 0,
+						}}
 					>
-						{/* Inner content scrolls */}
+						{/* Phone shell — rendered at full 390×780, then scaled down */}
 						<div
-							className="overflow-y-auto"
-							style={{ maxHeight: "calc(100vh - 80px)" }}
+							className="relative shadow-2xl rounded-[2.8rem]"
+							style={{
+								width: 390,
+								height: 780,
+								border: "12px solid #111827",
+								background: "#111827",
+								transform: `scale(${phoneScale})`,
+								transformOrigin: "top left",
+							}}
 						>
-							<WeddingPageView wedding={formData} isPreview />
+							{/* Notch */}
+							<div
+								className="absolute top-0 left-1/2 -translate-x-1/2 z-10 bg-[#111827] rounded-b-2xl"
+								style={{ width: 100, height: 28 }}
+							/>
+							{/* Scrollable screen content */}
+							<div
+								className="w-full h-full rounded-4xl overflow-y-auto overflow-x-hidden"
+								style={{ background: "#fff" }}
+							>
+								<WeddingPageView wedding={formData} isPreview />
+							</div>
 						</div>
 					</div>
 				</div>
