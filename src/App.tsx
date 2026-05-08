@@ -36,6 +36,7 @@ function AppRoutes() {
 
       {/* Protected */}
       <Route path="/create" element={<ProtectedRoute><CreatePage /></ProtectedRoute>} />
+      <Route path="/edit/:id" element={<ProtectedRoute><CreatePage /></ProtectedRoute>} />
       <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
 
       {/* Fallback */}

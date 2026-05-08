@@ -14,6 +14,7 @@ import {
 	Sparkles,
 	LayoutDashboard,
 	AlertCircle,
+	Pencil,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import supabase from "../utils/supabase";
@@ -254,6 +255,16 @@ export default function DashboardPage() {
 
 									{/* Actions */}
 									<div className="flex items-center gap-2">
+										{/* Edit button */}
+										<button
+											id={`edit-${w.id}`}
+											onClick={() => navigate(`/edit/${w.id}`)}
+											className="p-2 bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500/20 rounded-lg transition-all"
+											title="Edit page"
+										>
+											<Pencil className="w-4 h-4" />
+										</button>
+
 										{/* Publish toggle */}
 										<button
 											id={`toggle-publish-${w.id}`}
