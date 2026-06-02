@@ -12,6 +12,8 @@ import {
 import FirstSection from "../components/FirstSection";
 import SecondSection from "../components/SecondSection";
 import ThirdSection from "../components/ThirdSection";
+import AttireSection from "../components/AttireSection";
+import DecorSection from "../components/DecorSection";
 
 export default function LandingPage() {
 	const navigate = useNavigate();
@@ -21,8 +23,10 @@ export default function LandingPage() {
 			{/* Navbar */}
 			<nav className="p-6 flex justify-between items-center max-w-7xl mx-auto">
 				<div className="flex items-center gap-2">
-					<div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white font-bold text-xl">
-						<img src="/favicon.svg" alt="" />
+					{/* <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white font-bold text-xl"> */}
+					<div className="w-15 h-15  rounded-xl flex items-center justify-center text-white font-bold text-xl">
+						{/* <img src="/favicon.svg" alt="" /> */}
+						<img src="/aulia_dekorin_logo.png" alt="AuliaDekorin Logo" />
 					</div>
 					<span className="font-bold text-2xl tracking-tighter">
 						AuliaDekorin
@@ -39,16 +43,17 @@ export default function LandingPage() {
 						Harga
 					</a>
 				</div> */}
-				<button
-					onClick={() => navigate("/create")}
+				<a
+					href="https://wa.me/6288987135615?text=Halo%20kak%2C%20saya%20mau%20tanya-tanya%20tentang%20produk%20atau%20jasa%20yang%20ditawarkan"
+					target="_blank"
 					className="px-6 py-2.5 bg-black text-white rounded-full font-bold text-sm hover:bg-neutral-800 transition-all"
 				>
-					Mulai Sekarang
-				</button>
+					Kontak Kami
+				</a>
 			</nav>
 
 			{/* Hero Section */}
-			<section className="pt-20 pb-32 px-6">
+			<section className="pt-12 pb-32 px-6">
 				<div className="max-w-5xl mx-auto text-center">
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
@@ -57,35 +62,39 @@ export default function LandingPage() {
 					>
 						<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-neutral-100 text-neutral-600 text-sm font-medium mb-8">
 							<Sparkles className="w-4 h-4 text-amber-500" />
-							<span>Ayo buat udangan pernikahanmu yang cantik di sini!</span>
+							<span>Solusi Terbaik untuk Dekorasi Acara Anda</span>
 						</div>
 						<h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-8 leading-[0.9]">
-							Ceritakan Kisah Cintamu,
+							Wujudkan Acara Impianmu,
 							<br />
 							<span className="text-neutral-300 italic font-serif">
-								Di Sini!
+								Bersama Kami
 							</span>
 						</h1>
 						<p className="text-xl text-neutral-500 max-w-2xl mx-auto mb-12 leading-relaxed">
-							Buat undangan pernikahan digital impianmu dengan mudah dan cepat.
-							Bagikan cerita cinta kalian, kumpulkan RSVP, dan hitung mundur
-							menuju hari spesial.
+							Kami menyediakan layanan dekorasi terbaik untuk pernikahan,
+							lamaran, aqiqah, ulang tahun, dan momen spesial lainnya dengan
+							desain elegan dan harga terjangkau.
 						</p>
 						<div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-							<button
-								onClick={() => navigate("/create")}
+							<a
+								href="https://wa.me/6288987135615?text=Halo%20kak%2C%20saya%20mau%20tanya-tanya%20tentang%20jasa%20dekorasi%20AuliaDekorin"
+								target="_blank"
+								rel="noreferrer"
 								className="w-full sm:w-auto px-10 py-5 bg-black text-white rounded-full font-bold text-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform shadow-xl"
 							>
-								Buat Undangan Pernikahanmu <ChevronRight className="w-5 h-5" />
-							</button>
-							<button className="w-full sm:w-auto px-10 py-5 border border-neutral-200 rounded-full font-bold text-lg hover:bg-neutral-50 transition-colors">
-								Lihat Contoh
-							</button>
+								Konsultasi Sekarang <ChevronRight className="w-5 h-5" />
+							</a>
+							<a href="#portfolio" className="w-full sm:w-auto px-10 py-5 border border-neutral-200 rounded-full font-bold text-lg hover:bg-neutral-50 transition-colors flex items-center justify-center">
+								Lihat Portofolio
+							</a>
 						</div>
 					</motion.div>
 				</div>
 			</section>
 
+			<DecorSection />
+			<AttireSection />
 			<FirstSection />
 			<SecondSection />
 			<ThirdSection />
