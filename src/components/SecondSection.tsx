@@ -271,7 +271,7 @@ export default function MSMEGallerySlider() {
 					/>
 
 					{/* Gradient overlays — bottom vignette + subtle top fade */}
-					<div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-black/30 pointer-events-none" />
+					<div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/10 to-black/30 pointer-events-none" />
 
 					{/* Paralax-ish inner content (slides in from same direction) */}
 					<motion.div
