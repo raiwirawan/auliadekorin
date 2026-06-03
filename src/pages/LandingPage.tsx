@@ -85,7 +85,10 @@ export default function LandingPage() {
 							>
 								Konsultasi Sekarang <ChevronRight className="w-5 h-5" />
 							</a>
-							<a href="#portfolio" className="w-full sm:w-auto px-10 py-5 border border-neutral-200 rounded-full font-bold text-lg hover:bg-neutral-50 transition-colors flex items-center justify-center">
+							<a
+								href="#portfolio"
+								className="w-full sm:w-auto px-10 py-5 border border-neutral-200 rounded-full font-bold text-lg hover:bg-neutral-50 transition-colors flex items-center justify-center"
+							>
 								Lihat Portofolio
 							</a>
 						</div>
@@ -95,7 +98,7 @@ export default function LandingPage() {
 
 			<DecorSection />
 			<AttireSection />
-			<FirstSection />
+			{/* <FirstSection /> */}
 			<SecondSection />
 			<ThirdSection />
 
@@ -104,11 +107,11 @@ export default function LandingPage() {
 				<div className="max-w-7xl mx-auto px-6">
 					<div className="text-center mb-20">
 						<h2 className="text-4xl font-bold tracking-tight mb-4">
-							Semua yang kamu butuhkan
+							Wedding Landing Page
 						</h2>
 						<p className="text-neutral-500">
-							Dirancang untuk membuat perencanaan pernikahanmu sedikit lebih
-							ajaib.
+							Dirancang untuk membuat undangan digital pernikahanmu sedikit
+							lebih ajaib.
 						</p>
 					</div>
 
@@ -119,11 +122,11 @@ export default function LandingPage() {
 								title: "Cerita Cinta",
 								desc: "Ceritakan bagaimana kalian bertemu dan perjalanan cinta kalian dengan tipografi yang indah.",
 							},
-							{
-								icon: <Calendar className="w-8 h-8 text-blue-500" />,
-								title: "RSVP",
-								desc: "Kumpulkan dan kelola tanggapan tamu dengan mudah secara real-time.",
-							},
+							// {
+							// 	icon: <Calendar className="w-8 h-8 text-blue-500" />,
+							// 	title: "RSVP",
+							// 	desc: "Kumpulkan dan kelola tanggapan tamu dengan mudah secara real-time.",
+							// },
 							{
 								icon: <Clock className="w-8 h-8 text-emerald-500" />,
 								title: "Hitung Mundur",
@@ -179,14 +182,14 @@ export default function LandingPage() {
 							Siap untuk memulai selamanya?
 						</h2>
 						<p className="text-xl text-neutral-400 mb-12 max-w-xl mx-auto">
-							Bergabunglah dengan ribuan pasangan yang menggunakan Everlasting
+							Bergabunglah dengan puluhan pasangan yang menggunakan AuliaDekorin
 							untuk membagikan hari besar mereka.
 						</p>
 						<button
 							onClick={() => navigate("/create")}
 							className="px-12 py-6 bg-white text-black rounded-full font-bold text-xl hover:scale-105 transition-transform shadow-2xl"
 						>
-							Mulai Sekarang
+							Pesan Sekarang
 						</button>
 					</div>
 				</div>
