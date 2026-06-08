@@ -98,12 +98,12 @@ export default function LandingPage() {
 
 			<DecorSection />
 			<AttireSection />
-			{/* <FirstSection /> */}
+			<FirstSection />
 			<SecondSection />
 			<ThirdSection />
 
 			{/* Features Grid */}
-			<section className="py-32 bg-neutral-50">
+			{/* <section className="py-32 bg-neutral-50">
 				<div className="max-w-7xl mx-auto px-6">
 					<div className="text-center mb-20">
 						<h2 className="text-4xl font-bold tracking-tight mb-4">
@@ -165,7 +165,7 @@ export default function LandingPage() {
 						))}
 					</div>
 				</div>
-			</section>
+			</section> */}
 
 			{/* CTA Section */}
 			<section className="py-32 px-6">
@@ -183,14 +183,15 @@ export default function LandingPage() {
 						</h2>
 						<p className="text-xl text-neutral-400 mb-12 max-w-xl mx-auto">
 							Bergabunglah dengan puluhan pasangan yang menggunakan AuliaDekorin
-							untuk membagikan hari besar mereka.
+							untuk menyukseskan acara besar mereka.
 						</p>
-						<button
-							onClick={() => navigate("/create")}
+						<a
+							href="https://wa.me/6288987135615?text=Halo%20kak%2C%20saya%20mau%20tanya-tanya%20tentang%20jasa%20dekorasi%20AuliaDekorin"
+							target="_blank"
 							className="px-12 py-6 bg-white text-black rounded-full font-bold text-xl hover:scale-105 transition-transform shadow-2xl"
 						>
 							Pesan Sekarang
-						</button>
+						</a>
 					</div>
 				</div>
 			</section>
@@ -199,8 +200,8 @@ export default function LandingPage() {
 			<footer className="py-20 border-t border-neutral-100 px-6">
 				<div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
 					<div className="flex items-center gap-2">
-						<div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-bold">
-							E
+						<div className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold">
+							<img src="/aulia_dekorin_logo.png" alt="Logo AuliaDekorin" />
 						</div>
 						<span className="font-bold text-xl tracking-tighter">
 							AuliaDekorin
