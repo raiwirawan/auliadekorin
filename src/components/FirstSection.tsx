@@ -32,29 +32,29 @@ const partners = [
 	{
 		name: "AuliaDekorin Dekorasi",
 		location: "Denpasar, Bali",
-		specialty: "Wedding Decoration",
-		rating: 4.9,
+		specialty: "Dekorasi Pernikahan",
+		rating: 5,
 		reviews: 138,
-		tag: "Top Rated",
-		img: "https://picsum.photos/seed/msme-dekor/400/300",
+		tag: "Instagram",
+		img: "/decor/wedd.webp",
 	},
 	{
 		name: "AuliaDekorin MUA",
 		location: "Denpasar, Bali",
-		specialty: "Bridal Makeup",
+		specialty: "Makeup Artist",
 		rating: 5.0,
 		reviews: 214,
-		tag: "Fan Favourite",
-		img: "https://picsum.photos/seed/msme-beauty/400/300",
+		tag: "Instagram",
+		img: "/mua/mua.webp",
 	},
 	{
-		name: "AuliaDekorin Undangan Digital",
+		name: "AuliaDekorin Pakaian Pengantin",
 		location: "Denpasar, Bali",
-		specialty: "Web Development",
+		specialty: "Pakaian Pengantin",
 		rating: 5.0,
 		reviews: 102,
-		tag: "Top Rated",
-		img: "https://picsum.photos/seed/msme-photo/400/300",
+		tag: "Instagram",
+		img: "/attire/attire.webp",
 	},
 ];
 
@@ -134,11 +134,11 @@ export default function MSMESection() {
 						viewport={{ once: true }}
 					>
 						<h3 className="text-2xl font-bold tracking-tight">
-							Vendor Yang Tersedia
+							Akun-Akun Instagram Kami
 						</h3>
-						<button className="text-sm font-semibold text-neutral-400 hover:text-black transition-colors underline underline-offset-4">
-							Lihat Semua Partner
-						</button>
+						{/* <button className="text-sm font-semibold text-neutral-400 hover:text-black transition-colors underline underline-offset-4">
+							Lihat Semua Akun
+						</button> */}
 					</motion.div>
 
 					<div className="grid md:grid-cols-3 gap-6">
@@ -201,7 +201,7 @@ export default function MSMESection() {
 				</div>
 
 				{/* ── UMKM Pride Banner ── */}
-				<motion.div
+				{/* <motion.div
 					className="mt-20 p-8 md:p-12 rounded-3xl bg-neutral-50 border border-neutral-100 flex flex-col md:flex-row items-center justify-between gap-6"
 					initial={{ opacity: 0, y: 16 }}
 					whileInView={{ opacity: 1, y: 0 }}
@@ -235,7 +235,7 @@ export default function MSMESection() {
 							</div>
 						))}
 					</div>
-				</motion.div>
+				</motion.div> */}
 			</div>
 		</section>
 	);

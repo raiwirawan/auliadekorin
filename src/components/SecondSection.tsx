@@ -24,57 +24,54 @@ interface Slide {
 const slides: Slide[] = [
 	{
 		id: 1,
-		src: "https://picsum.photos/seed/wedding-decor-1/1600/900",
+		src: "/attire/attire.webp",
 		partner: "AuliaDekorin Dekorasi",
 		location: "Denpasar, Bali",
-		category: "Venue Decoration",
-		caption:
-			"Lush floral archways hand-crafted for an open-air garden ceremony.",
+		category: "Busana",
+		caption: "Busana Islami yang sangat cocok untuk acara pernikahan Muslim.",
 	},
 	{
 		id: 2,
-		src: "https://picsum.photos/seed/bridal-makeup-1/1600/900",
+		src: "/decor/wedd.webp",
 		partner: "AuliaDekorin MUA",
 		location: "Denpasar, Bali",
-		category: "Bridal Makeup",
-		caption:
-			"Timeless soft-glam bridal look that photographs beautifully in any light.",
+		category: "Dekorasi Pernikahan",
+		caption: "Dekorasi acara pernikahan untuk duduk dan foto pengantin.",
 	},
 	{
 		id: 3,
-		src: "https://picsum.photos/seed/wedding-table/1600/900",
-		partner: "AuliaDekorin Undangan Digital",
+		src: "/mua/mua.webp",
+		partner: "AuliaDekorin MUA",
 		location: "Denpasar, Bali",
-		category: "Web Development",
+		category: "Makeup Artist",
 		caption:
-			"Elevated table settings — candles, pampas grass, and bespoke centrepieces.",
+			"Tampil memukau di hari spesial dengan pulasan makeup profesional yang menonjolkan kecantikan alami Anda.",
 	},
 	{
 		id: 4,
-		src: "https://picsum.photos/seed/bride-portrait/1600/900",
+		src: "/attire/attire3.webp",
 		partner: "AuliaDekorin Dekorasi",
 		location: "Denpasar, Bali",
-		category: "Photography",
+		category: "Busana Pengantin",
 		caption:
-			"Golden-hour portraits that tell the story of your most important day.",
+			"Busana pengantin adat dengan detail bordir mewah yang memancarkan aura anggun dan elegan.",
 	},
 	{
 		id: 5,
-		src: "https://picsum.photos/seed/wedding-flowers/1600/900",
+		src: "/decor/wedd2.webp",
 		partner: "AuliaDekorin Dekorasi",
 		location: "Denpasar, Bali",
-		category: "Floral Design",
+		category: "Akad Nikah",
 		caption:
-			"Seasonal bouquets and aisle florals sourced from local Balinese growers.",
+			"Dekorasi dengan nuansa warna biru muda yang sangat cocok untuk acara akad nikah.",
 	},
 	{
 		id: 6,
-		src: "https://picsum.photos/seed/bridal-look-2/1600/900",
+		src: "/mua/mua2.webp",
 		partner: "AuliaDekorin MUA",
 		location: "Denpasar, Bali",
-		category: "Hair & Makeup",
-		caption:
-			"Full hair and makeup sessions — from first trial to the big morning.",
+		category: "Makeup Artist",
+		caption: "Elegan dan memukau dengan balutan ...",
 	},
 ];
 
@@ -345,7 +342,7 @@ export default function MSMEGallerySlider() {
 				<div className="flex items-center gap-3">
 					<span className="h-px w-8 bg-white/30" />
 					<span className="text-white/50 text-xs font-semibold tracking-[0.2em] uppercase">
-						UMKM Gallery
+						AuliaDekorin Gallery
 					</span>
 				</div>
 
