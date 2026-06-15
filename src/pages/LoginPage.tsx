@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
-import { Mail, Lock, Loader2, AlertCircle, Heart } from "lucide-react";
+import { Mail, Lock, Loader2, AlertCircle } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 export default function LoginPage() {
@@ -27,122 +27,127 @@ export default function LoginPage() {
 	};
 
 	return (
-		<div className="min-h-screen bg-[#0f0c1a] flex items-center justify-center p-4 relative overflow-hidden">
-			{/* Decorative blobs */}
-			<div className="absolute top-[-10%] left-[-5%] w-96 h-96 bg-purple-700/30 rounded-full blur-3xl pointer-events-none" />
-			<div className="absolute bottom-[-10%] right-[-5%] w-96 h-96 bg-rose-600/20 rounded-full blur-3xl pointer-events-none" />
+		<div className="min-h-screen bg-white flex flex-col">
+			{/* Navbar */}
+			<nav className="p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
+				<Link to="/" className="flex items-center gap-2">
+					<div className="w-10 h-10 rounded-xl flex items-center justify-center">
+						<img src="/aulia_dekorin_logo.png" alt="AuliaDekorin Logo" className="w-10 h-10 object-contain" />
+					</div>
+					<span className="font-bold text-2xl tracking-tighter text-neutral-900">
+						AuliaDekorin
+					</span>
+				</Link>
+				<Link
+					to="/"
+					className="text-sm font-medium text-neutral-500 hover:text-neutral-900 transition-colors"
+				>
+					← Kembali ke Beranda
+				</Link>
+			</nav>
 
-			<motion.div
-				initial={{ y: 24, opacity: 0 }}
-				animate={{ y: 0, opacity: 1 }}
-				transition={{ duration: 0.5, ease: "easeOut" }}
-				className="w-full max-w-md relative z-10"
-			>
-				{/* Card */}
-				<div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
-					{/* Logo */}
-					<div className="flex items-center justify-center gap-2 mb-8">
-						<div className="w-10 h-10 bg-linear-to-br from-rose-400 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-							<Heart className="w-5 h-5 text-white fill-white" />
+			{/* Main content */}
+			<div className="flex-1 flex items-center justify-center px-4 py-16">
+				<motion.div
+					initial={{ y: 24, opacity: 0 }}
+					animate={{ y: 0, opacity: 1 }}
+					transition={{ duration: 0.5, ease: "easeOut" }}
+					className="w-full max-w-md"
+				>
+					{/* Badge */}
+					<div className="flex justify-center mb-8">
+						<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-neutral-100 text-neutral-600 text-sm font-medium">
+							<span>🔐</span>
+							<span>Admin Access Only</span>
 						</div>
-						<span className="text-white font-bold text-2xl tracking-tight">
-							AuliaDekorin
-						</span>
 					</div>
 
-					<h1 className="text-2xl font-bold text-white text-center mb-1">
-						Welcome back
+					<h1 className="text-4xl font-bold tracking-tighter text-center text-neutral-900 mb-2">
+						Selamat Datang
 					</h1>
-					<p className="text-white/50 text-sm text-center mb-8">
-						Sign in to manage your wedding pages
+					<p className="text-neutral-500 text-center text-base mb-10">
+						Masuk untuk mengelola halaman undangan pernikahan
 					</p>
 
-					{error && (
-						<motion.div
-							initial={{ opacity: 0, y: -8 }}
-							animate={{ opacity: 1, y: 0 }}
-							className="flex items-center gap-2 p-3 mb-6 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm"
-						>
-							<AlertCircle className="w-4 h-4 shrink-0" />
-							{error}
-						</motion.div>
-					)}
+					{/* Card */}
+					<div className="bg-white border border-neutral-200 rounded-3xl p-8 shadow-sm">
+						{error && (
+							<motion.div
+								initial={{ opacity: 0, y: -8 }}
+								animate={{ opacity: 1, y: 0 }}
+								className="flex items-center gap-2 p-3 mb-6 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm"
+							>
+								<AlertCircle className="w-4 h-4 shrink-0" />
+								{error}
+							</motion.div>
+						)}
 
-					<form onSubmit={handleSubmit} className="space-y-4">
-						<div className="space-y-1.5">
-							<label className="text-xs font-semibold uppercase tracking-wider text-white/40">
-								Email
-							</label>
-							<div className="relative">
-								<Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-								<input
-									id="login-email"
-									type="email"
-									required
-									autoComplete="email"
-									placeholder="you@example.com"
-									value={email}
-									onChange={(e) => setEmail(e.target.value)}
-									className="w-full pl-11 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all"
-								/>
+						<form onSubmit={handleSubmit} className="space-y-5">
+							<div className="space-y-1.5">
+								<label className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
+									Email
+								</label>
+								<div className="relative">
+									<Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+									<input
+										id="login-email"
+										type="email"
+										required
+										autoComplete="email"
+										placeholder="you@example.com"
+										value={email}
+										onChange={(e) => setEmail(e.target.value)}
+										className="w-full pl-11 pr-4 py-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/20 focus:border-neutral-900 transition-all"
+									/>
+								</div>
 							</div>
-						</div>
 
-						<div className="space-y-1.5">
-							<label className="text-xs font-semibold uppercase tracking-wider text-white/40">
-								Password
-							</label>
-							<div className="relative">
-								<Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-								<input
-									id="login-password"
-									type="password"
-									required
-									autoComplete="current-password"
-									placeholder="••••••••"
-									value={password}
-									onChange={(e) => setPassword(e.target.value)}
-									className="w-full pl-11 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all"
-								/>
+							<div className="space-y-1.5">
+								<label className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
+									Password
+								</label>
+								<div className="relative">
+									<Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+									<input
+										id="login-password"
+										type="password"
+										required
+										autoComplete="current-password"
+										placeholder="••••••••"
+										value={password}
+										onChange={(e) => setPassword(e.target.value)}
+										className="w-full pl-11 pr-4 py-3.5 bg-neutral-50 border border-neutral-200 rounded-xl text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/20 focus:border-neutral-900 transition-all"
+									/>
+								</div>
 							</div>
-						</div>
 
-						<button
-							id="login-submit"
-							type="submit"
-							disabled={isLoading}
-							className="w-full py-3.5 mt-2 bg-linear-to-r from-rose-500 to-purple-600 text-white font-bold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-rose-500/20"
-						>
-							{isLoading ? (
-								<>
-									<Loader2 className="w-4 h-4 animate-spin" /> Signing in…
-								</>
-							) : (
-								"Sign In"
-							)}
-						</button>
-					</form>
+							<button
+								id="login-submit"
+								type="submit"
+								disabled={isLoading}
+								className="w-full py-4 mt-2 bg-black text-white font-bold rounded-full hover:bg-neutral-800 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2 shadow-xl"
+							>
+								{isLoading ? (
+									<>
+										<Loader2 className="w-4 h-4 animate-spin" /> Masuk…
+									</>
+								) : (
+									"Masuk"
+								)}
+							</button>
+						</form>
+					</div>
+				</motion.div>
+			</div>
 
-					<p className="text-center text-white/40 text-sm mt-6">
-						Don't have an account?{" "}
-						<Link
-							to="/register"
-							className="text-rose-400 hover:text-rose-300 font-semibold transition-colors"
-						>
-							Create one
-						</Link>
+			{/* Footer */}
+			<footer className="py-8 border-t border-neutral-100 px-6">
+				<div className="max-w-7xl mx-auto flex justify-center">
+					<p className="text-neutral-400 text-sm">
+						© 2026 AuliaDekorin. All rights reserved.
 					</p>
 				</div>
-
-				<p className="text-center mt-6">
-					<Link
-						to="/"
-						className="text-white/30 text-sm hover:text-white/60 transition-colors"
-					>
-						← Back to home
-					</Link>
-				</p>
-			</motion.div>
+			</footer>
 		</div>
 	);
 }

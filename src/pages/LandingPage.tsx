@@ -73,8 +73,8 @@ export default function LandingPage() {
 						</h1>
 						<p className="text-xl text-neutral-500 max-w-2xl mx-auto mb-12 leading-relaxed">
 							Kami menyediakan layanan dekorasi terbaik untuk pernikahan,
-							lamaran, aqiqah, ulang tahun, dan momen spesial lainnya dengan
-							desain elegan dan harga terjangkau.
+							lamaran dan acara spesial lainnya dengan desain elegen dan harga
+							terjangkau.
 						</p>
 						<div className="flex flex-col sm:flex-row items-center justify-center gap-4">
 							<a
