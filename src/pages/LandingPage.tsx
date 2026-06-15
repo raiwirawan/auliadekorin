@@ -14,6 +14,7 @@ import SecondSection from "../components/SecondSection";
 import ThirdSection from "../components/ThirdSection";
 import AttireSection from "../components/AttireSection";
 import DecorSection from "../components/DecorSection";
+import CatalogSection from "../components/CatalogSection";
 
 export default function LandingPage() {
 	const navigate = useNavigate();
@@ -97,6 +98,7 @@ export default function LandingPage() {
 			</section>
 
 			<DecorSection />
+			<CatalogSection />
 			<AttireSection />
 			<FirstSection />
 			<SecondSection />
