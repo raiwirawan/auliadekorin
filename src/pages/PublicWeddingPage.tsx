@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Wedding } from '../types';
 import WeddingPageView from '../components/WeddingPageView';
 import { Heart } from 'lucide-react';
@@ -7,6 +7,9 @@ import supabase from '../utils/supabase';
 
 export default function PublicWeddingPage() {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+  // Decode the ?to= param — e.g. /w/zahra-zaka?to=Budi+Santoso
+  const inviteeName = searchParams.get('to') ? decodeURIComponent(searchParams.get('to')!) : undefined;
   const navigate = useNavigate();
   const [wedding, setWedding] = useState<Wedding | null>(null);
   const [loading, setLoading] = useState(true);
@@ -78,5 +81,5 @@ export default function PublicWeddingPage() {
     );
   }
 
-  return <WeddingPageView wedding={wedding} />;
+  return <WeddingPageView wedding={wedding} inviteeName={inviteeName} />;
 }

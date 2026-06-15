@@ -191,7 +191,8 @@ export default function DashboardPage() {
 	};
 
 	const copyLink = (slug: string) => {
-		navigator.clipboard.writeText(`${window.location.origin}/w/${slug}`);
+		// Copy a template URL so the owner can replace "Nama+Tamu" with the actual guest name
+		navigator.clipboard.writeText(`${window.location.origin}/w/${slug}?to=Nama+Tamu`);
 		setCopiedSlug(slug);
 		setTimeout(() => setCopiedSlug(null), 2000);
 	};
@@ -366,7 +367,7 @@ export default function DashboardPage() {
 
 									{/* Date */}
 									{w.date && (
-										<div className="flex items-center gap-1.5 text-neutral-400 text-xs mb-5">
+										<div className="flex items-center gap-1.5 text-neutral-400 text-xs">
 											<Calendar className="w-3 h-3" />
 											{new Date(w.date).toLocaleDateString("id-ID", {
 												day: "numeric",
@@ -375,6 +376,14 @@ export default function DashboardPage() {
 											})}
 										</div>
 									)}
+
+									{/* ?to= usage hint */}
+									<div className="mt-3 mb-5 px-3 py-2.5 bg-amber-50 border border-amber-100 rounded-xl">
+										<p className="text-amber-700 text-[10px] font-medium mb-1">Personalisasi per tamu:</p>
+										<p className="text-amber-600 text-[10px] font-mono truncate">
+											/w/{w.slug}<span className="font-bold">?to=Nama+Tamu</span>
+										</p>
+									</div>
 
 									{/* Actions */}
 									<div className="flex items-center gap-2">
@@ -412,12 +421,12 @@ export default function DashboardPage() {
 											)}
 										</button>
 
-										{/* Copy link */}
+										{/* Copy link — copies ?to= template */}
 										<button
 											id={`copy-link-${w.id}`}
 											onClick={() => copyLink(w.slug)}
 											className="p-2.5 bg-neutral-50 border border-neutral-200 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 hover:border-neutral-400 rounded-xl transition-all"
-											title="Salin tautan"
+											title="Salin tautan template (?to=Nama+Tamu)"
 										>
 											{copiedSlug === w.slug ? (
 												<span className="text-emerald-600 text-xs font-bold px-1">✓</span>
