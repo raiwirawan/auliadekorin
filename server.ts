@@ -239,6 +239,23 @@ async function startServer() {
     }
   });
 
+  app.delete("/api/weddings/:id", authenticateToken, (req: AuthRequest, res: Response) => {
+    try {
+      const wedding = db.prepare("SELECT * FROM weddings WHERE id = ?").get(req.params.id) as any;
+      if (!wedding) return res.status(404).json({ error: "Wedding not found" });
+      if (wedding.user_id !== req.userId) return res.status(403).json({ error: "Forbidden" });
+
+      // Delete associated RSVPs first to satisfy foreign key constraints
+      db.prepare("DELETE FROM rsvps WHERE wedding_id = ?").run(req.params.id);
+      db.prepare("DELETE FROM weddings WHERE id = ?").run(req.params.id);
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Delete wedding error:", error);
+      res.status(500).json({ error: "Failed to delete wedding" });
+    }
+  });
+
   // ── RSVP Routes ───────────────────────────────────────────────────────────────
 
   app.post("/api/rsvps", (req: Request, res: Response) => {

@@ -14,6 +14,7 @@ import SecondSection from "../components/SecondSection";
 import ThirdSection from "../components/ThirdSection";
 import AttireSection from "../components/AttireSection";
 import DecorSection from "../components/DecorSection";
+import CatalogSection from "../components/CatalogSection";
 
 export default function LandingPage() {
 	const navigate = useNavigate();
@@ -73,8 +74,8 @@ export default function LandingPage() {
 						</h1>
 						<p className="text-xl text-neutral-500 max-w-2xl mx-auto mb-12 leading-relaxed">
 							Kami menyediakan layanan dekorasi terbaik untuk pernikahan,
-							lamaran, aqiqah, ulang tahun, dan momen spesial lainnya dengan
-							desain elegan dan harga terjangkau.
+							lamaran dan acara spesial lainnya dengan desain elegen dan harga
+							terjangkau.
 						</p>
 						<div className="flex flex-col sm:flex-row items-center justify-center gap-4">
 							<a
@@ -97,6 +98,7 @@ export default function LandingPage() {
 			</section>
 
 			<DecorSection />
+			<CatalogSection />
 			<AttireSection />
 			<FirstSection />
 			<SecondSection />

@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
-import { Scissors, Flower2, Camera, Star, MapPin, Award } from "lucide-react";
+import { Scissors, Flower2, Ribbon, Star, MapPin, Award } from "lucide-react";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -20,9 +20,9 @@ const services = [
 		accent: "#f59e0b",
 	},
 	{
-		icon: <Camera className="w-6 h-6" />,
-		label: "Fotografi & Videografi",
-		desc: "Abadikan setiap momen berharga dan janji suci dengan kejelasan sinematik dan penceritaan artistik.",
+		icon: <Ribbon className="w-6 h-6" />,
+		label: "Busana Pengantin",
+		desc: "Pakaian adat dengan detail bordir mewah yang memancarkan aura anggun dan elegan.",
 		color: "bg-sky-50 text-sky-600",
 		accent: "#0ea5e9",
 	},

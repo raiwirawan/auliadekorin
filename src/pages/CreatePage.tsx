@@ -341,11 +341,12 @@ export default function CreatePage() {
 			>
 				<header className="p-6 border-b flex justify-between items-center sticky top-0 bg-white z-10">
 					<div className="flex items-center gap-2">
-						<div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-bold">
-							E
+						<div className="w-15 h-15  rounded-xl flex items-center justify-center text-white font-bold text-xl">
+							{/* <img src="/favicon.svg" alt="" /> */}
+							<img src="/aulia_dekorin_logo.png" alt="AuliaDekorin Logo" />
 						</div>
-						<span className="font-bold text-xl tracking-tight">
-							Everlasting
+						<span className="font-bold text-2xl tracking-tighter">
+							AuliaDekorin
 						</span>
 						{isEditMode && (
 							<span className="ml-2 text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 border border-blue-100">
