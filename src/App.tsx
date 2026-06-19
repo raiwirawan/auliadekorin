@@ -5,7 +5,6 @@ import LandingPage from './pages/LandingPage';
 import CreatePage from './pages/CreatePage';
 import PublicWeddingPage from './pages/PublicWeddingPage';
 import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 
 /** Redirects unauthenticated users to /login */
@@ -32,7 +31,6 @@ function AppRoutes() {
 
       {/* Guest-only */}
       <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />
-      <Route path="/register" element={<GuestRoute><RegisterPage /></GuestRoute>} />
 
       {/* Protected */}
       <Route path="/create" element={<ProtectedRoute><CreatePage /></ProtectedRoute>} />
