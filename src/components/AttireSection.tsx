@@ -72,7 +72,7 @@ export default function AttireSection() {
 									{attire.description}
 								</p>
 								<a
-									href="https://wa.me/6288987135615?text=Halo%20kak%2C%20saya%20tertarik%20dengan%20koleksi%20busana%20pengantinnya"
+									href="https://wa.me/6281237042471?text=Halo%20kak%2C%20saya%20tertarik%20dengan%20koleksi%20busana%20pengantinnya"
 									target="_blank"
 									rel="noreferrer"
 									className="inline-flex items-center justify-center px-6 py-3 bg-black text-white rounded-full font-bold text-sm hover:bg-neutral-800 transition-colors w-full"

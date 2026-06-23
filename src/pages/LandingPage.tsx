@@ -45,11 +45,11 @@ export default function LandingPage() {
 					</a>
 				</div> */}
 				<a
-					href="https://wa.me/6288987135615?text=Halo%20kak%2C%20saya%20mau%20tanya-tanya%20tentang%20produk%20atau%20jasa%20yang%20ditawarkan"
+					href="https://wa.me/6281237042471?text=Halo%20kak%2C%20saya%20mau%20tanya-tanya%20tentang%20produk%20atau%20jasa%20yang%20ditawarkan"
 					target="_blank"
 					className="px-6 py-2.5 bg-black text-white rounded-full font-bold text-sm hover:bg-neutral-800 transition-all"
 				>
-					Kontak Kami
+					Hubungi Kami
 				</a>
 			</nav>
 
@@ -79,7 +79,7 @@ export default function LandingPage() {
 						</p>
 						<div className="flex flex-col sm:flex-row items-center justify-center gap-4">
 							<a
-								href="https://wa.me/6288987135615?text=Halo%20kak%2C%20saya%20mau%20tanya-tanya%20tentang%20jasa%20dekorasi%20AuliaDekorin"
+								href="https://wa.me/6281237042471?text=Halo%20kak%2C%20saya%20mau%20tanya-tanya%20tentang%20jasa%20dekorasi%20AuliaDekorin"
 								target="_blank"
 								rel="noreferrer"
 								className="w-full sm:w-auto px-10 py-5 bg-black text-white rounded-full font-bold text-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform shadow-xl"
@@ -188,7 +188,7 @@ export default function LandingPage() {
 							untuk menyukseskan acara besar mereka.
 						</p>
 						<a
-							href="https://wa.me/6288987135615?text=Halo%20kak%2C%20saya%20mau%20tanya-tanya%20tentang%20jasa%20dekorasi%20AuliaDekorin"
+							href="https://wa.me/6281237042471?text=Halo%20kak%2C%20saya%20mau%20tanya-tanya%20tentang%20jasa%20dekorasi%20AuliaDekorin"
 							target="_blank"
 							className="px-12 py-6 bg-white text-black rounded-full font-bold text-xl hover:scale-105 transition-transform shadow-2xl"
 						>
