@@ -82,7 +82,9 @@ export default function CatalogSection() {
 							viewport={{ once: true }}
 							transition={{ delay: index * 0.1 }}
 							className={`relative flex flex-col bg-white rounded-3xl overflow-hidden border ${
-								pkg.popular ? "border-amber-500 shadow-xl" : "border-neutral-200 shadow-sm"
+								pkg.popular
+									? "border-amber-500 shadow-xl"
+									: "border-neutral-200 shadow-sm"
 							} hover:shadow-2xl transition-all duration-300`}
 						>
 							{pkg.popular && (
@@ -101,7 +103,9 @@ export default function CatalogSection() {
 								<div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
 								<div className="absolute bottom-4 left-6 right-6 text-white">
 									<h3 className="text-2xl font-bold mb-1">{pkg.title}</h3>
-									<p className="text-3xl font-bold text-amber-400">{pkg.price}</p>
+									<p className="text-3xl font-bold text-amber-400">
+										{pkg.price}
+									</p>
 								</div>
 							</div>
 
@@ -122,8 +126,8 @@ export default function CatalogSection() {
 								</div>
 
 								<a
-									href={`https://wa.me/6287126323423?text=${encodeURIComponent(
-										`Halo Kak, saya tertarik dengan paket ${pkg.title} seharga ${pkg.price}. Boleh minta info lebih lanjut?`
+									href={`https://wa.me/6281237042471?text=${encodeURIComponent(
+										`Halo Kak, saya tertarik dengan paket ${pkg.title} seharga ${pkg.price}. Boleh minta info lebih lanjut?`,
 									)}`}
 									target="_blank"
 									rel="noreferrer"
