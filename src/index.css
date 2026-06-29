@@ -1,15 +1,60 @@
+/* ─── Google Fonts — must be first @import ───────────────────────────────── */
+/* Inter (sans), Playfair Display (serif), Dancing Script, JetBrains Mono    */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=JetBrains+Mono:wght@400;500&display=swap');
+
 @import "tailwindcss";
 
+/* ─── Swiss Style / Minimalism design system (DESIGN_WEDDING.md) ─────────── */
 @theme {
-  --font-serif: "Playfair Display", serif;
-  --font-sans: "Inter", sans-serif;
+  --font-serif:  "Playfair Display", serif;
+  --font-sans:   "Inter", sans-serif;
   --font-script: "Dancing Script", cursive;
+  --font-mono:   "JetBrains Mono", monospace;
+
+  /* Design token colours */
+  --color-design-black:  #111111;
+  --color-design-white:  #FFFFFF;
+  --color-design-beige:  #F5F1E8;
+  --color-design-grey:   #808080;
+  --color-design-taupe:  #B38B6D;
 }
 
 @layer base {
-  @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
-}
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
 
-body {
-  @apply bg-neutral-50 text-neutral-900;
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-[#F5F1E8] text-[#111111] font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  /* Custom focus ring using taupe accent */
+  :focus-visible {
+    outline: 2px solid #B38B6D;
+    outline-offset: 2px;
+  }
+
+  /* Monospace elements use JetBrains Mono */
+  code, kbd, pre, .font-mono {
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  /* Taupe-tinted selection */
+  ::selection {
+    background: #B38B6D22;
+    color: #111111;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
