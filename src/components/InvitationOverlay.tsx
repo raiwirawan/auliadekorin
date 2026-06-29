@@ -66,7 +66,7 @@ export default function InvitationOverlay({ wedding, inviteeName, onOpen }: Invi
   return (
     <motion.div
       key="overlay"
-      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br ${style.bg} overflow-hidden`}
+      className={`fixed inset-0 z-100 flex flex-col items-center justify-center bg-linear-to-br ${style.bg} overflow-hidden`}
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 1.04 }}
       transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
@@ -99,7 +99,7 @@ export default function InvitationOverlay({ wedding, inviteeName, onOpen }: Invi
 
       {/* ── Top decorative line ── */}
       <motion.div
-        className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-current to-transparent opacity-20"
+        className="absolute top-0 inset-x-0 h-1 bg-linear-to-r from-transparent via-current to-transparent opacity-20"
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ duration: 1.2, delay: 0.4 }}

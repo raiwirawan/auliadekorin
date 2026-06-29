@@ -17,11 +17,61 @@ import {
 	X,
 	LayoutDashboard,
 	Save,
+	AlertTriangle,
 } from "lucide-react";
 import { uploadHeroImage } from "../utils/uploadImage";
 import { useAuth } from "../context/AuthContext";
 import supabase from "../utils/supabase";
 import { nanoid } from "nanoid";
+
+/* ─── Design tokens ──────────────────────────────────────────────────────── */
+const C = {
+	black: "#111111",
+	white: "#FFFFFF",
+	beige: "#F5F1E8",
+	grey: "#808080",
+	taupe: "#B38B6D",
+	surface: "#F7F4EF", // slightly off-white for inputs
+	border: "#E2DDD7",
+} as const;
+
+/* ─── Reusable label ─────────────────────────────────────────────────────── */
+const FieldLabel = ({
+	children,
+	htmlFor,
+}: {
+	children: React.ReactNode;
+	htmlFor?: string;
+}) => (
+	<label
+		htmlFor={htmlFor}
+		className="block font-sans font-medium uppercase tracking-[0.18em] mb-2"
+		style={{ fontSize: "0.7rem", color: C.grey }}
+	>
+		{children}
+	</label>
+);
+
+/* ─── Input base class ───────────────────────────────────────────────────── */
+const inputCls =
+	"w-full px-4 py-3.5 font-sans text-sm outline-none transition-all border border-[#E2DDD7] bg-[#F7F4EF] focus:border-[#B38B6D] focus:ring-2 focus:ring-[#B38B6D]/20";
+
+/* ─── Step indicator ─────────────────────────────────────────────────────── */
+const StepDots = ({ total, current }: { total: number; current: number }) => (
+	<div className="flex items-center gap-2">
+		{Array.from({ length: total }).map((_, i) => (
+			<div
+				key={i}
+				className="transition-all"
+				style={{
+					width: i + 1 === current ? 20 : 6,
+					height: 6,
+					background: i + 1 === current ? C.taupe : C.border,
+				}}
+			/>
+		))}
+	</div>
+);
 
 export default function CreatePage() {
 	const navigate = useNavigate();
@@ -46,15 +96,19 @@ export default function CreatePage() {
 	const previewPanelRef = useRef<HTMLDivElement>(null);
 	const [phoneScale, setPhoneScale] = useState(1);
 
-	// Auto-scale the phone preview to fit the right panel
+	const PHONE_W = 390;
+	const PHONE_H = 844;
+	const PHONE_BORDER = 12;
+
 	useEffect(() => {
 		const panel = previewPanelRef.current;
 		if (!panel) return;
-		const PHONE_W = 390 + 24; // phone width + border
-		const PADDING = 64; // px-8 * 2
+		const PADDING = 64;
 		const computeScale = () => {
 			const available = panel.clientWidth - PADDING;
-			setPhoneScale(Math.min(1, available / PHONE_W));
+			const byWidth = available / (PHONE_W + PHONE_BORDER * 2);
+			const byHeight = (panel.clientHeight - 120) / (PHONE_H + PHONE_BORDER * 2);
+			setPhoneScale(Math.min(1, byWidth, byHeight));
 		};
 		computeScale();
 		const ro = new ResizeObserver(computeScale);
@@ -153,7 +207,6 @@ export default function CreatePage() {
 		setPublishError(null);
 		try {
 			if (isEditMode && editId) {
-				// --- UPDATE existing record ---
 				const { error: dbError } = await supabase
 					.from("weddings")
 					.update({
@@ -178,7 +231,6 @@ export default function CreatePage() {
 				if (dbError) throw new Error(dbError.message);
 				setIsSaved(true);
 			} else {
-				// --- INSERT new record ---
 				let slug: string;
 				if (customSlug.trim()) {
 					slug = customSlug
@@ -190,7 +242,6 @@ export default function CreatePage() {
 						setPublishError("Invalid custom slug.");
 						return;
 					}
-					// Check uniqueness
 					const { data: existing } = await supabase
 						.from("weddings")
 						.select("id")
@@ -249,27 +300,49 @@ export default function CreatePage() {
 		alert("Link copied to clipboard!");
 	};
 
-	// Loading spinner while fetching existing data in edit mode
+	/* ── Loading state ────────────────────────────────────────────────────── */
 	if (isLoadingEdit) {
 		return (
-			<div className="min-h-screen bg-neutral-50 flex items-center justify-center">
-				<div className="flex flex-col items-center gap-4 text-neutral-400">
-					<Loader2 className="w-10 h-10 animate-spin" />
-					<span className="font-medium">Loading wedding data…</span>
+			<div
+				className="min-h-screen flex items-center justify-center"
+				style={{ background: C.beige }}
+			>
+				<div className="flex flex-col items-center gap-4" style={{ color: C.grey }}>
+					<Loader2 className="w-8 h-8 animate-spin" style={{ color: C.taupe }} />
+					<span
+						className="font-sans uppercase tracking-widest"
+						style={{ fontSize: "0.7rem" }}
+					>
+						Loading wedding data
+					</span>
 				</div>
 			</div>
 		);
 	}
 
-	// Hard error loading the wedding to edit
+	/* ── Load error state ─────────────────────────────────────────────────── */
 	if (loadError) {
 		return (
-			<div className="min-h-screen bg-neutral-50 flex items-center justify-center p-4">
-				<div className="bg-white p-8 rounded-3xl shadow-2xl max-w-md w-full text-center">
-					<p className="text-red-500 font-medium mb-4">{loadError}</p>
+			<div
+				className="min-h-screen flex items-center justify-center p-4"
+				style={{ background: C.beige }}
+			>
+				<div
+					className="p-10 max-w-md w-full text-center border"
+					style={{
+						background: C.white,
+						borderColor: C.border,
+						boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+					}}
+				>
+					<AlertTriangle className="w-8 h-8 mx-auto mb-4" style={{ color: C.taupe }} />
+					<p className="font-sans font-medium mb-6 text-sm" style={{ color: C.black }}>
+						{loadError}
+					</p>
 					<button
 						onClick={() => navigate("/dashboard")}
-						className="px-6 py-3 bg-black text-white rounded-full font-bold"
+						className="px-6 py-3 font-sans font-semibold text-sm uppercase tracking-widest transition-all hover:opacity-80"
+						style={{ background: C.black, color: C.white }}
 					>
 						Back to Dashboard
 					</button>
@@ -278,52 +351,98 @@ export default function CreatePage() {
 		);
 	}
 
+	/* ── Success / saved state ────────────────────────────────────────────── */
 	if (isSaved) {
 		return (
-			<div className="min-h-screen bg-neutral-50 flex items-center justify-center p-4">
+			<div
+				className="min-h-screen flex items-center justify-center p-4"
+				style={{ background: C.beige }}
+			>
 				<motion.div
-					initial={{ scale: 0.9, opacity: 0 }}
+					initial={{ scale: 0.95, opacity: 0 }}
 					animate={{ scale: 1, opacity: 1 }}
-					className="bg-white p-8 md:p-12 rounded-3xl shadow-2xl max-w-lg w-full text-center"
+					transition={{ duration: 0.42, ease: "easeOut" }}
+					className="p-10 md:p-14 max-w-lg w-full text-center border"
+					style={{
+						background: C.white,
+						borderColor: C.border,
+						boxShadow: "0 2px 24px rgba(0,0,0,0.08)",
+					}}
 				>
-					<CheckCircle className="w-20 h-20 text-emerald-500 mx-auto mb-6" />
-					<h1 className="text-3xl font-bold mb-4">
-						{isEditMode ? "Changes Saved!" : "Your Wedding Page is Live!"}
+					{/* Success icon */}
+					<div
+						className="w-14 h-14 flex items-center justify-center mx-auto mb-6"
+						style={{ background: `${C.taupe}15`, border: `1px solid ${C.taupe}40` }}
+					>
+						<CheckCircle className="w-7 h-7" style={{ color: C.taupe }} />
+					</div>
+
+					<p
+						className="font-sans uppercase tracking-[0.2em] mb-2"
+						style={{ fontSize: "0.65rem", color: C.grey }}
+					>
+						{isEditMode ? "Updated" : "Published"}
+					</p>
+					<h1
+						className="text-2xl md:text-3xl font-bold tracking-tight mb-3"
+						style={{ color: C.black }}
+					>
+						{isEditMode ? "Changes Saved" : "Your Page is Live"}
 					</h1>
-					<p className="text-neutral-600 mb-8">
+					<p className="text-sm font-sans leading-relaxed mb-8" style={{ color: C.grey }}>
 						{isEditMode
 							? "Your wedding page has been updated successfully."
-							: "Congratulations! Your personalized wedding invitation is ready to be shared with your loved ones."}
+							: "Your personalized wedding invitation is ready to share."}
 					</p>
 
-					<div className="bg-neutral-100 p-4 rounded-xl flex items-center justify-between mb-8">
-						<span className="text-sm font-mono truncate mr-4">
+					{/* URL display */}
+					<div
+						className="flex items-center justify-between px-4 py-3 mb-8 border"
+						style={{
+							background: C.surface,
+							borderColor: C.border,
+						}}
+					>
+						<span
+							className="text-xs font-mono truncate mr-3"
+							style={{ color: C.grey }}
+						>
 							{window.location.origin}/w/{savedSlug}
 						</span>
 						<button
 							onClick={copyToClipboard}
-							className="p-2 hover:bg-neutral-200 rounded-lg transition-colors"
+							className="p-1.5 transition-all hover:opacity-60 shrink-0"
+							title="Copy link"
 						>
-							<Copy className="w-5 h-5" />
+							<Copy className="w-4 h-4" style={{ color: C.taupe }} />
 						</button>
 					</div>
 
-					<div className="flex flex-col gap-4">
+					{/* Actions */}
+					<div className="flex flex-col gap-3">
 						<button
 							onClick={() => navigate(`/w/${savedSlug}`)}
-							className="w-full py-4 bg-black text-white rounded-full font-bold hover:bg-neutral-800 transition-colors"
+							className="w-full py-3.5 font-sans font-semibold text-sm uppercase tracking-widest transition-all hover:opacity-80"
+							style={{ background: C.black, color: C.white }}
 						>
 							View My Page
 						</button>
 						<button
 							onClick={() => navigate("/dashboard")}
-							className="w-full py-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full font-bold hover:bg-emerald-100 transition-colors flex items-center justify-center gap-2"
+							className="w-full py-3.5 font-sans font-semibold text-sm uppercase tracking-widest border transition-all hover:opacity-60 flex items-center justify-center gap-2"
+							style={{
+								background: "transparent",
+								color: C.black,
+								borderColor: C.border,
+							}}
 						>
-							<LayoutDashboard className="w-5 h-5" /> Go to Dashboard
+							<LayoutDashboard className="w-4 h-4" />
+							Dashboard
 						</button>
 						<button
 							onClick={() => navigate("/")}
-							className="w-full py-4 border border-neutral-200 rounded-full font-bold hover:bg-neutral-50 transition-colors"
+							className="w-full py-3.5 font-sans text-sm uppercase tracking-widest transition-all hover:opacity-50"
+							style={{ color: C.grey }}
 						>
 							Back to Home
 						</button>
@@ -333,80 +452,120 @@ export default function CreatePage() {
 		);
 	}
 
+	/* ── Main create/edit layout ──────────────────────────────────────────── */
 	return (
-		<div className="h-screen bg-white flex flex-col md:flex-row overflow-hidden">
-			{/* Form Side — independently scrollable */}
+		<div
+			className="h-screen flex flex-col md:flex-row overflow-hidden"
+			style={{ background: C.white }}
+		>
+			{/* ── Form side ──────────────────────────────────────────────── */}
 			<div
-				className={`flex-1 flex flex-col h-screen overflow-y-auto bg-white ${showPreview ? "hidden md:flex" : "flex"}`}
+				className={`flex-1 flex flex-col h-screen overflow-y-auto ${showPreview ? "hidden md:flex" : "flex"}`}
+				style={{ background: C.white }}
 			>
-				<header className="p-6 border-b flex justify-between items-center sticky top-0 bg-white z-10">
-					<div className="flex items-center gap-2">
-						<div className="w-15 h-15  rounded-xl flex items-center justify-center text-white font-bold text-xl">
-							{/* <img src="/favicon.svg" alt="" /> */}
-							<img src="/aulia_dekorin_logo.png" alt="AuliaDekorin Logo" />
+				{/* Header */}
+				<header
+					className="px-6 py-4 flex justify-between items-center sticky top-0 z-10 border-b"
+					style={{
+						background: C.white,
+						borderColor: C.border,
+					}}
+				>
+					<div className="flex items-center gap-3">
+						<div className="w-9 h-9 flex items-center justify-center overflow-hidden">
+							<img src="/aulia_dekorin_logo.png" alt="AuliaDekorin Logo" className="w-full h-full object-contain" />
 						</div>
-						<span className="font-bold text-2xl tracking-tighter">
+						<span
+							className="font-bold tracking-tight text-lg"
+							style={{ color: C.black }}
+						>
 							AuliaDekorin
 						</span>
 						{isEditMode && (
-							<span className="ml-2 text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 border border-blue-100">
+							<span
+								className="text-xs font-sans font-medium px-2 py-0.5 uppercase tracking-wider border"
+								style={{
+									fontSize: "0.6rem",
+									color: C.taupe,
+									borderColor: `${C.taupe}40`,
+									background: `${C.taupe}10`,
+								}}
+							>
 								Editing
 							</span>
 						)}
 					</div>
+
 					<div className="flex items-center gap-4">
 						<button
 							onClick={() => setShowPreview(true)}
-							className="md:hidden flex items-center gap-2 text-sm font-medium px-4 py-2 bg-neutral-100 rounded-full"
+							className="md:hidden flex items-center gap-2 text-xs font-sans font-medium px-4 py-2 uppercase tracking-widest border transition-all hover:opacity-70"
+							style={{ borderColor: C.border, color: C.black }}
 						>
-							<Eye className="w-4 h-4" /> Preview
+							<Eye className="w-3.5 h-3.5" /> Preview
 						</button>
-						<div className="text-sm font-medium text-neutral-400">
-							Step {step} of 4
-						</div>
+						<StepDots total={4} current={step} />
+						<span
+							className="font-sans text-xs"
+							style={{ color: C.grey }}
+						>
+							{step} / 4
+						</span>
 					</div>
 				</header>
 
-				<main className="flex-1 p-6 md:p-12 max-w-2xl mx-auto w-full">
+				{/* Main form content */}
+				<main className="flex-1 px-6 py-8 md:px-12 md:py-12 max-w-2xl mx-auto w-full">
 					<AnimatePresence mode="wait">
+						{/* ── STEP 1: Basic Information ──────────────────────────── */}
 						{step === 1 && (
 							<motion.div
 								key="step1"
 								initial={{ x: 20, opacity: 0 }}
 								animate={{ x: 0, opacity: 1 }}
 								exit={{ x: -20, opacity: 0 }}
+								transition={{ duration: 0.25, ease: "easeOut" }}
 								className="space-y-8"
 							>
 								<div>
-									<h2 className="text-3xl font-bold mb-2">Basic Information</h2>
-									<p className="text-neutral-500">
-										Let's start with the essentials of your big day.
+									<p
+										className="font-sans uppercase tracking-[0.2em] mb-2"
+										style={{ fontSize: "0.65rem", color: C.taupe }}
+									>
+										Step 01
+									</p>
+									<h2
+										className="text-2xl md:text-3xl font-bold tracking-tight mb-1"
+										style={{ color: C.black }}
+									>
+										Basic Information
+									</h2>
+									<p className="text-sm font-sans" style={{ color: C.grey }}>
+										Start with the essentials of your big day.
 									</p>
 								</div>
 
-								<div className="grid grid-cols-2 gap-6">
-									<div className="space-y-2">
-										<label className="text-sm font-bold uppercase tracking-wider text-neutral-400">
-											Bride's Name
-										</label>
+								<div className="grid grid-cols-2 gap-5">
+									<div>
+										<FieldLabel htmlFor="brideName">Bride's Name</FieldLabel>
 										<input
+											id="brideName"
 											type="text"
 											placeholder="Jane"
-											className="w-full p-4 bg-neutral-50 rounded-xl border border-neutral-100 focus:ring-2 focus:ring-black outline-none transition-all"
+											className={inputCls}
 											value={formData.brideName}
 											onChange={(e) =>
 												setFormData({ ...formData, brideName: e.target.value })
 											}
 										/>
 									</div>
-									<div className="space-y-2">
-										<label className="text-sm font-bold uppercase tracking-wider text-neutral-400">
-											Groom's Name
-										</label>
+									<div>
+										<FieldLabel htmlFor="groomName">Groom's Name</FieldLabel>
 										<input
+											id="groomName"
 											type="text"
 											placeholder="John"
-											className="w-full p-4 bg-neutral-50 rounded-xl border border-neutral-100 focus:ring-2 focus:ring-black outline-none transition-all"
+											className={inputCls}
 											value={formData.groomName}
 											onChange={(e) =>
 												setFormData({ ...formData, groomName: e.target.value })
@@ -415,27 +574,25 @@ export default function CreatePage() {
 									</div>
 								</div>
 
-								<div className="grid grid-cols-2 gap-6">
-									<div className="space-y-2">
-										<label className="text-sm font-bold uppercase tracking-wider text-neutral-400">
-											Date
-										</label>
+								<div className="grid grid-cols-2 gap-5">
+									<div>
+										<FieldLabel htmlFor="weddingDate">Date</FieldLabel>
 										<input
+											id="weddingDate"
 											type="date"
-											className="w-full p-4 bg-neutral-50 rounded-xl border border-neutral-100 focus:ring-2 focus:ring-black outline-none transition-all"
+											className={inputCls}
 											value={formData.date}
 											onChange={(e) =>
 												setFormData({ ...formData, date: e.target.value })
 											}
 										/>
 									</div>
-									<div className="space-y-2">
-										<label className="text-sm font-bold uppercase tracking-wider text-neutral-400">
-											Time
-										</label>
+									<div>
+										<FieldLabel htmlFor="weddingTime">Time</FieldLabel>
 										<input
+											id="weddingTime"
 											type="time"
-											className="w-full p-4 bg-neutral-50 rounded-xl border border-neutral-100 focus:ring-2 focus:ring-black outline-none transition-all"
+											className={inputCls}
 											value={formData.time}
 											onChange={(e) =>
 												setFormData({ ...formData, time: e.target.value })
@@ -445,28 +602,26 @@ export default function CreatePage() {
 								</div>
 
 								<div className="space-y-4">
-									<div className="space-y-2">
-										<label className="text-sm font-bold uppercase tracking-wider text-neutral-400">
-											Venue Name
-										</label>
+									<div>
+										<FieldLabel htmlFor="venueName">Venue Name</FieldLabel>
 										<input
+											id="venueName"
 											type="text"
 											placeholder="The Grand Palace"
-											className="w-full p-4 bg-neutral-50 rounded-xl border border-neutral-100 focus:ring-2 focus:ring-black outline-none transition-all"
+											className={inputCls}
 											value={formData.venueName}
 											onChange={(e) =>
 												setFormData({ ...formData, venueName: e.target.value })
 											}
 										/>
 									</div>
-									<div className="space-y-2">
-										<label className="text-sm font-bold uppercase tracking-wider text-neutral-400">
-											Venue Address
-										</label>
+									<div>
+										<FieldLabel htmlFor="venueAddress">Venue Address</FieldLabel>
 										<input
+											id="venueAddress"
 											type="text"
 											placeholder="123 Wedding St, Love City"
-											className="w-full p-4 bg-neutral-50 rounded-xl border border-neutral-100 focus:ring-2 focus:ring-black outline-none transition-all"
+											className={inputCls}
 											value={formData.venueAddress}
 											onChange={(e) =>
 												setFormData({
@@ -476,14 +631,21 @@ export default function CreatePage() {
 											}
 										/>
 									</div>
-									<div className="space-y-2">
-										<label className="text-sm font-bold uppercase tracking-wider text-neutral-400">
-											Google Maps URL (Optional)
-										</label>
+									<div>
+										<FieldLabel htmlFor="venueMaps">
+											Google Maps URL{" "}
+											<span
+												className="normal-case"
+												style={{ color: C.border, fontWeight: 400 }}
+											>
+												(optional)
+											</span>
+										</FieldLabel>
 										<input
+											id="venueMaps"
 											type="url"
 											placeholder="https://maps.google.com/..."
-											className="w-full p-4 bg-neutral-50 rounded-xl border border-neutral-100 focus:ring-2 focus:ring-black outline-none transition-all"
+											className={inputCls}
 											value={formData.venueMapsUrl}
 											onChange={(e) =>
 												setFormData({
@@ -497,101 +659,140 @@ export default function CreatePage() {
 							</motion.div>
 						)}
 
+						{/* ── STEP 2: Love Story ─────────────────────────────────── */}
 						{step === 2 && (
 							<motion.div
 								key="step2"
 								initial={{ x: 20, opacity: 0 }}
 								animate={{ x: 0, opacity: 1 }}
 								exit={{ x: -20, opacity: 0 }}
+								transition={{ duration: 0.25, ease: "easeOut" }}
 								className="space-y-8"
 							>
 								<div>
-									<h2 className="text-3xl font-bold mb-2">Our Love Story</h2>
-									<p className="text-neutral-500">
+									<p
+										className="font-sans uppercase tracking-[0.2em] mb-2"
+										style={{ fontSize: "0.65rem", color: C.taupe }}
+									>
+										Step 02
+									</p>
+									<h2
+										className="text-2xl md:text-3xl font-bold tracking-tight mb-1"
+										style={{ color: C.black }}
+									>
+										Love Story
+									</h2>
+									<p className="text-sm font-sans" style={{ color: C.grey }}>
 										Share the magic of how you both met and fell in love.
 									</p>
 								</div>
 
-								<div className="space-y-6">
-									<div className="space-y-2">
-										<label className="text-sm font-bold uppercase tracking-wider text-neutral-400">
-											Tagline / Subtitle
-										</label>
+								<div className="space-y-5">
+									<div>
+										<FieldLabel htmlFor="tagline">Tagline / Subtitle</FieldLabel>
 										<input
+											id="tagline"
 											type="text"
 											placeholder="A journey of a thousand miles begins with a single step..."
-											className="w-full p-4 bg-neutral-50 rounded-xl border border-neutral-100 focus:ring-2 focus:ring-black outline-none transition-all"
+											className={inputCls}
 											value={formData.tagline}
 											onChange={(e) =>
 												setFormData({ ...formData, tagline: e.target.value })
 											}
 										/>
 									</div>
-									<div className="space-y-2">
-										<label className="text-sm font-bold uppercase tracking-wider text-neutral-400">
-											The Story
-										</label>
+
+									<div>
+										<FieldLabel htmlFor="loveStory">The Story</FieldLabel>
 										<textarea
+											id="loveStory"
 											rows={6}
 											placeholder="It all started when..."
-											className="w-full p-4 bg-neutral-50 rounded-xl border border-neutral-100 focus:ring-2 focus:ring-black outline-none transition-all resize-none"
+											className={`${inputCls} resize-none`}
 											value={formData.loveStory}
 											onChange={(e) =>
 												setFormData({ ...formData, loveStory: e.target.value })
 											}
 										/>
 									</div>
-									<div className="space-y-3">
-										<label className="text-sm font-bold uppercase tracking-wider text-neutral-400">
-											Hero Image
-										</label>
 
-										<div className="flex gap-2">
+									{/* Hero image */}
+									<div className="space-y-3">
+										<FieldLabel>Hero Image</FieldLabel>
+
+										{/* Mode toggle */}
+										<div className="flex gap-0 border" style={{ borderColor: C.border }}>
 											<button
 												type="button"
 												onClick={() => setHeroInputMode("upload")}
-												className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${heroInputMode === "upload" ? "bg-black text-white" : "bg-neutral-100 text-neutral-500 hover:bg-neutral-200"}`}
+												className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-sans font-medium uppercase tracking-wider transition-all"
+												style={{
+													background: heroInputMode === "upload" ? C.black : "transparent",
+													color: heroInputMode === "upload" ? C.white : C.grey,
+												}}
 											>
-												<Upload className="w-4 h-4" /> Upload File
+												<Upload className="w-3.5 h-3.5" /> Upload File
 											</button>
 											<button
 												type="button"
 												onClick={() => setHeroInputMode("url")}
-												className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${heroInputMode === "url" ? "bg-black text-white" : "bg-neutral-100 text-neutral-500 hover:bg-neutral-200"}`}
+												className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-sans font-medium uppercase tracking-wider transition-all border-l"
+												style={{
+													borderColor: C.border,
+													background: heroInputMode === "url" ? C.black : "transparent",
+													color: heroInputMode === "url" ? C.white : C.grey,
+												}}
 											>
-												<Link className="w-4 h-4" /> Image URL
+												<Link className="w-3.5 h-3.5" /> Image URL
 											</button>
 										</div>
 
 										{heroInputMode === "upload" && (
-											<div className="space-y-3">
+											<div className="space-y-2">
 												<div
 													onDragOver={(e) => e.preventDefault()}
 													onDrop={handleDrop}
 													onClick={() => fileInputRef.current?.click()}
-													className={`relative flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed rounded-xl cursor-pointer transition-all ${isUploadingHero ? "border-neutral-300 bg-neutral-50" : "border-neutral-200 hover:border-black hover:bg-neutral-50"}`}
+													className="flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed cursor-pointer transition-all"
+													style={{
+														borderColor: isUploadingHero ? C.border : C.grey,
+													}}
 												>
 													{isUploadingHero ? (
 														<>
-															<Loader2 className="w-8 h-8 text-neutral-400 animate-spin" />
-															<span className="text-sm text-neutral-500">
-																Uploading...
+															<Loader2
+																className="w-7 h-7 animate-spin"
+																style={{ color: C.taupe }}
+															/>
+															<span
+																className="text-xs font-sans uppercase tracking-widest"
+																style={{ color: C.grey }}
+															>
+																Uploading…
 															</span>
 														</>
 													) : (
 														<>
-															<Upload className="w-8 h-8 text-neutral-400" />
+															<Upload className="w-7 h-7" style={{ color: C.grey }} />
 															<div className="text-center">
-																<span className="text-sm font-medium text-neutral-700">
+																<span
+																	className="text-sm font-sans font-medium block"
+																	style={{ color: C.black }}
+																>
 																	Click to upload
 																</span>
-																<span className="text-sm text-neutral-400">
-																	{" "}
+																<span
+																	className="text-xs font-sans"
+																	style={{ color: C.grey }}
+																>
 																	or drag and drop
 																</span>
 															</div>
-															<span className="text-xs text-neutral-400">
-																PNG, JPG, WebP up to 10MB
+															<span
+																className="text-xs font-sans uppercase tracking-wider"
+																style={{ color: C.border }}
+															>
+																PNG, JPG, WebP — max 10MB
 															</span>
 														</>
 													)}
@@ -608,7 +809,13 @@ export default function CreatePage() {
 													/>
 												</div>
 												{uploadError && (
-													<p className="text-xs text-red-500">{uploadError}</p>
+													<p
+														className="text-xs font-sans flex items-center gap-1"
+														style={{ color: "#C0392B" }}
+													>
+														<AlertTriangle className="w-3 h-3" />
+														{uploadError}
+													</p>
 												)}
 											</div>
 										)}
@@ -617,7 +824,7 @@ export default function CreatePage() {
 											<input
 												type="url"
 												placeholder="https://images.unsplash.com/..."
-												className="w-full p-4 bg-neutral-50 rounded-xl border border-neutral-100 focus:ring-2 focus:ring-black outline-none transition-all"
+												className={inputCls}
 												value={formData.heroImage}
 												onChange={(e) =>
 													setFormData({
@@ -629,7 +836,7 @@ export default function CreatePage() {
 										)}
 
 										{formData.heroImage && (
-											<div className="relative rounded-xl overflow-hidden border border-neutral-200">
+											<div className="relative border overflow-hidden" style={{ borderColor: C.border }}>
 												<img
 													src={formData.heroImage}
 													alt="Hero preview"
@@ -640,42 +847,58 @@ export default function CreatePage() {
 													onClick={() =>
 														setFormData({ ...formData, heroImage: "" })
 													}
-													className="absolute top-2 right-2 p-1.5 bg-black/60 hover:bg-black/80 rounded-full text-white transition-colors"
+													className="absolute top-2 right-2 p-1.5 transition-all hover:opacity-70"
+													style={{ background: "rgba(0,0,0,0.6)" }}
 												>
-													<X className="w-4 h-4" />
+													<X className="w-3.5 h-3.5 text-white" />
 												</button>
 											</div>
 										)}
 
-										<p className="text-xs text-neutral-400">
-											Tip: Use a high-quality landscape photo for the best look.
+										<p
+											className="text-xs font-sans"
+											style={{ color: C.grey }}
+										>
+											Tip: Use a high-quality landscape photo for the best result.
 										</p>
 									</div>
 								</div>
 							</motion.div>
 						)}
 
+						{/* ── STEP 3: Design & Music ─────────────────────────────── */}
 						{step === 3 && (
 							<motion.div
 								key="step3"
 								initial={{ x: 20, opacity: 0 }}
 								animate={{ x: 0, opacity: 1 }}
 								exit={{ x: -20, opacity: 0 }}
+								transition={{ duration: 0.25, ease: "easeOut" }}
 								className="space-y-8"
 							>
 								<div>
-									<h2 className="text-3xl font-bold mb-2">Design & Music</h2>
-									<p className="text-neutral-500">
+									<p
+										className="font-sans uppercase tracking-[0.2em] mb-2"
+										style={{ fontSize: "0.65rem", color: C.taupe }}
+									>
+										Step 03
+									</p>
+									<h2
+										className="text-2xl md:text-3xl font-bold tracking-tight mb-1"
+										style={{ color: C.black }}
+									>
+										Design & Music
+									</h2>
+									<p className="text-sm font-sans" style={{ color: C.grey }}>
 										Set the mood and aesthetic for your wedding page.
 									</p>
 								</div>
 
 								<div className="space-y-8">
+									{/* Theme selection */}
 									<div className="space-y-4">
-										<label className="text-sm font-bold uppercase tracking-wider text-neutral-400">
-											Select Theme
-										</label>
-										<div className="grid grid-cols-2 gap-4">
+										<FieldLabel>Select Theme</FieldLabel>
+										<div className="grid grid-cols-2 gap-3">
 											{(Object.keys(THEMES) as Array<keyof typeof THEMES>).map(
 												(t) => (
 													<button
@@ -683,12 +906,22 @@ export default function CreatePage() {
 														onClick={() =>
 															setFormData({ ...formData, theme: t })
 														}
-														className={`p-4 rounded-2xl border-2 text-left transition-all ${formData.theme === t ? "border-black bg-neutral-50" : "border-neutral-100 hover:border-neutral-200"}`}
+														className="p-4 border-2 text-left transition-all"
+														style={{
+															borderColor:
+																formData.theme === t ? C.taupe : C.border,
+															background:
+																formData.theme === t ? `${C.taupe}08` : "transparent",
+														}}
 													>
 														<div
-															className={`w-full h-12 rounded-lg mb-3 ${THEMES[t].bg} border border-black/5`}
+															className={`w-full h-10 mb-3 border ${THEMES[t].bg}`}
+															style={{ borderColor: C.border }}
 														/>
-														<span className="font-bold capitalize">
+														<span
+															className="font-sans font-semibold capitalize text-sm"
+															style={{ color: C.black }}
+														>
 															{t.replace("-", " ")}
 														</span>
 													</button>
@@ -697,18 +930,23 @@ export default function CreatePage() {
 										</div>
 									</div>
 
+									{/* Font style */}
 									<div className="space-y-4">
-										<label className="text-sm font-bold uppercase tracking-wider text-neutral-400">
-											Font Style
-										</label>
-										<div className="flex gap-4">
-											{["serif", "script", "sans"].map((f) => (
+										<FieldLabel>Font Style</FieldLabel>
+										<div className="flex gap-0 border" style={{ borderColor: C.border }}>
+											{["serif", "script", "sans"].map((f, i) => (
 												<button
 													key={f}
 													onClick={() =>
 														setFormData({ ...formData, fontStyle: f as any })
 													}
-													className={`flex-1 py-3 rounded-xl border-2 transition-all ${formData.fontStyle === f ? "border-black bg-neutral-50" : "border-neutral-100 hover:border-neutral-200"}`}
+													className={`flex-1 py-3 text-sm transition-all ${i > 0 ? "border-l" : ""}`}
+													style={{
+														borderColor: C.border,
+														background:
+															formData.fontStyle === f ? C.black : "transparent",
+														color: formData.fontStyle === f ? C.white : C.grey,
+													}}
 												>
 													<span
 														className={`capitalize ${f === "serif" ? "font-serif" : f === "script" ? "font-script" : "font-sans"}`}
@@ -720,12 +958,12 @@ export default function CreatePage() {
 										</div>
 									</div>
 
-									<div className="space-y-2">
-										<label className="text-sm font-bold uppercase tracking-wider text-neutral-400">
-											Background Music
-										</label>
+									{/* Background music */}
+									<div>
+										<FieldLabel htmlFor="musicSelect">Background Music</FieldLabel>
 										<select
-											className="w-full p-4 bg-neutral-50 rounded-xl border border-neutral-100 focus:ring-2 focus:ring-black outline-none transition-all"
+											id="musicSelect"
+											className={inputCls}
 											value={formData.musicId}
 											onChange={(e) =>
 												setFormData({ ...formData, musicId: e.target.value })
@@ -743,26 +981,54 @@ export default function CreatePage() {
 							</motion.div>
 						)}
 
+						{/* ── STEP 4: Final Touches ──────────────────────────────── */}
 						{step === 4 && (
 							<motion.div
 								key="step4"
 								initial={{ x: 20, opacity: 0 }}
 								animate={{ x: 0, opacity: 1 }}
 								exit={{ x: -20, opacity: 0 }}
+								transition={{ duration: 0.25, ease: "easeOut" }}
 								className="space-y-8"
 							>
 								<div>
-									<h2 className="text-3xl font-bold mb-2">Final Touches</h2>
-									<p className="text-neutral-500">
-										Almost there! Configure the final details for your guests.
+									<p
+										className="font-sans uppercase tracking-[0.2em] mb-2"
+										style={{ fontSize: "0.65rem", color: C.taupe }}
+									>
+										Step 04
+									</p>
+									<h2
+										className="text-2xl md:text-3xl font-bold tracking-tight mb-1"
+										style={{ color: C.black }}
+									>
+										Final Touches
+									</h2>
+									<p className="text-sm font-sans" style={{ color: C.grey }}>
+										Configure the final details for your guests.
 									</p>
 								</div>
 
-								<div className="space-y-8">
-									<div className="flex items-center justify-between p-4 bg-neutral-50 rounded-2xl">
+								<div className="space-y-6">
+									{/* Countdown toggle */}
+									<div
+										className="flex items-center justify-between p-4 border"
+										style={{
+											background: C.surface,
+											borderColor: C.border,
+										}}
+									>
 										<div>
-											<h4 className="font-bold">Countdown Timer</h4>
-											<p className="text-sm text-neutral-500">
+											<h4
+												className="font-sans font-semibold text-sm"
+												style={{ color: C.black }}
+											>
+												Countdown Timer
+											</h4>
+											<p
+												className="text-xs font-sans mt-0.5"
+												style={{ color: C.grey }}
+											>
 												Show a live countdown to your wedding day.
 											</p>
 										</div>
@@ -773,21 +1039,27 @@ export default function CreatePage() {
 													showCountdown: !formData.showCountdown,
 												})
 											}
-											className={`w-14 h-8 rounded-full transition-colors relative ${formData.showCountdown ? "bg-black" : "bg-neutral-200"}`}
+											className="w-12 h-6 relative transition-colors shrink-0"
+											style={{
+												background: formData.showCountdown ? C.taupe : C.border,
+											}}
 										>
 											<div
-												className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-all ${formData.showCountdown ? "left-7" : "left-1"}`}
+												className="absolute top-1 w-4 h-4 bg-white transition-all"
+												style={{
+													left: formData.showCountdown ? "calc(100% - 20px)" : 4,
+												}}
 											/>
 										</button>
 									</div>
 
-									<div className="space-y-2">
-										<label className="text-sm font-bold uppercase tracking-wider text-neutral-400">
-											RSVP Deadline
-										</label>
+									{/* RSVP deadline */}
+									<div>
+										<FieldLabel htmlFor="rsvpDeadline">RSVP Deadline</FieldLabel>
 										<input
+											id="rsvpDeadline"
 											type="date"
-											className="w-full p-4 bg-neutral-50 rounded-xl border border-neutral-100 focus:ring-2 focus:ring-black outline-none transition-all"
+											className={inputCls}
 											value={formData.rsvpDeadline}
 											onChange={(e) =>
 												setFormData({
@@ -798,23 +1070,37 @@ export default function CreatePage() {
 										/>
 									</div>
 
+									{/* Custom slug (new) */}
 									{!isEditMode && (
-										<div className="space-y-2">
-											<label className="text-sm font-bold uppercase tracking-wider text-neutral-400">
+										<div>
+											<FieldLabel htmlFor="customSlug">
 												Custom URL Slug{" "}
-												<span className="normal-case text-neutral-300">
+												<span
+													className="normal-case"
+													style={{ color: C.border, fontWeight: 400 }}
+												>
 													(optional)
 												</span>
-											</label>
-											<div className="flex items-center bg-neutral-50 border border-neutral-100 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-black transition-all">
-												<span className="pl-4 pr-2 text-sm text-neutral-400 whitespace-nowrap select-none">
+											</FieldLabel>
+											<div
+												className="flex items-center border overflow-hidden focus-within:border-[#B38B6D] focus-within:ring-2 focus-within:ring-[#B38B6D]/20 transition-all"
+												style={{
+													borderColor: C.border,
+													background: C.surface,
+												}}
+											>
+												<span
+													className="pl-4 pr-2 text-xs font-sans whitespace-nowrap select-none"
+													style={{ color: C.grey }}
+												>
 													{window.location.host}/w/
 												</span>
 												<input
-													id="custom-slug-input"
+													id="customSlug"
 													type="text"
 													placeholder={`${formData.brideName.toLowerCase() || "bride"}-and-${formData.groomName.toLowerCase() || "groom"}`}
-													className="flex-1 py-4 pr-4 bg-transparent outline-none text-sm font-mono"
+													className="flex-1 py-3.5 pr-4 bg-transparent outline-none text-xs font-mono"
+													style={{ color: C.black }}
 													value={customSlug}
 													onChange={(e) =>
 														setCustomSlug(
@@ -825,31 +1111,53 @@ export default function CreatePage() {
 													}
 												/>
 											</div>
-											<p className="text-xs text-neutral-400">
-												Leave blank to auto-generate. Only lowercase letters,
-												numbers, and hyphens.
+											<p
+												className="text-xs font-sans mt-1.5"
+												style={{ color: C.grey }}
+											>
+												Leave blank to auto-generate. Lowercase, numbers, hyphens only.
 											</p>
 										</div>
 									)}
+
+									{/* Current URL in edit mode */}
 									{isEditMode && savedSlug && (
-										<div className="space-y-2">
-											<label className="text-sm font-bold uppercase tracking-wider text-neutral-400">
-												Your Page URL
-											</label>
-											<div className="flex items-center bg-neutral-50 border border-neutral-100 rounded-xl px-4 py-3">
-												<span className="text-sm font-mono text-neutral-500 truncate">
+										<div>
+											<FieldLabel>Your Page URL</FieldLabel>
+											<div
+												className="flex items-center px-4 py-3 border"
+												style={{
+													background: C.surface,
+													borderColor: C.border,
+												}}
+											>
+												<span
+													className="text-xs font-mono truncate"
+													style={{ color: C.grey }}
+												>
 													{window.location.host}/w/{savedSlug}
 												</span>
 											</div>
-											<p className="text-xs text-neutral-400">
+											<p
+												className="text-xs font-sans mt-1.5"
+												style={{ color: C.grey }}
+											>
 												The URL slug cannot be changed after creation.
 											</p>
 										</div>
 									)}
 
+									{/* Error message */}
 									{publishError && (
-										<div className="flex items-start gap-2 p-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm">
-											<span className="mt-0.5">⚠️</span>
+										<div
+											className="flex items-start gap-2 p-3 border text-sm font-sans"
+											style={{
+												background: "#FEF2F2",
+												borderColor: "#FECACA",
+												color: "#C0392B",
+											}}
+										>
+											<AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
 											<span>{publishError}</span>
 										</div>
 									)}
@@ -859,42 +1167,48 @@ export default function CreatePage() {
 					</AnimatePresence>
 				</main>
 
-				<footer className="p-6 border-t bg-white sticky bottom-0 z-10">
-					<div className="flex justify-between max-w-2xl mx-auto w-full">
+				{/* Footer navigation */}
+				<footer
+					className="px-6 py-4 border-t sticky bottom-0 z-10"
+					style={{ background: C.white, borderColor: C.border }}
+				>
+					<div className="flex justify-between max-w-2xl mx-auto w-full items-center">
 						<button
 							disabled={step === 1}
 							onClick={() => setStep((s) => s - 1)}
-							className="flex items-center gap-2 px-6 py-3 rounded-full font-bold disabled:opacity-30 hover:bg-neutral-100 transition-colors"
+							className="flex items-center gap-2 px-5 py-2.5 font-sans font-medium text-sm uppercase tracking-wider border transition-all disabled:opacity-30 hover:opacity-70"
+							style={{ borderColor: C.border, color: C.black }}
 						>
-							<ChevronLeft className="w-5 h-5" /> Back
+							<ChevronLeft className="w-4 h-4" /> Back
 						</button>
 
 						{step < 4 ? (
 							<button
 								onClick={() => setStep((s) => s + 1)}
-								className="flex items-center gap-2 px-8 py-3 bg-black text-white rounded-full font-bold hover:bg-neutral-800 transition-colors"
+								className="flex items-center gap-2 px-8 py-2.5 font-sans font-semibold text-sm uppercase tracking-wider transition-all hover:opacity-80"
+								style={{ background: C.black, color: C.white }}
 							>
-								Next <ChevronRight className="w-5 h-5" />
+								Next <ChevronRight className="w-4 h-4" />
 							</button>
 						) : (
 							<button
 								onClick={handlePublish}
 								disabled={isPublishing}
-								className="flex items-center gap-2 px-8 py-3 bg-emerald-600 text-white rounded-full font-bold hover:bg-emerald-700 transition-colors disabled:opacity-50"
+								className="flex items-center gap-2 px-8 py-2.5 font-sans font-semibold text-sm uppercase tracking-wider transition-all hover:opacity-80 disabled:opacity-50"
+								style={{ background: C.taupe, color: C.white }}
 							>
 								{isPublishing ? (
-									isEditMode ? (
-										"Saving..."
-									) : (
-										"Publishing..."
-									)
+									<>
+										<Loader2 className="w-4 h-4 animate-spin" />
+										{isEditMode ? "Saving…" : "Publishing…"}
+									</>
 								) : isEditMode ? (
 									<>
-										<Save className="w-5 h-5" /> Save Changes
+										<Save className="w-4 h-4" /> Save Changes
 									</>
 								) : (
 									<>
-										Publish Page <Send className="w-5 h-5" />
+										Publish Page <Send className="w-4 h-4" />
 									</>
 								)}
 							</button>
@@ -903,51 +1217,101 @@ export default function CreatePage() {
 				</footer>
 			</div>
 
-			{/* Preview Side */}
+			{/* ── Preview Side ────────────────────────────────────────────── */}
 			<div
 				ref={previewPanelRef}
-				className={`flex-1 bg-neutral-100 relative h-screen overflow-y-auto flex-col ${showPreview ? "flex" : "hidden md:flex"}`}
+				className={`flex-1 relative h-screen flex-col border-l ${showPreview ? "flex" : "hidden md:flex"}`}
+				style={{ background: C.beige, borderColor: C.border }}
 			>
+				{/* Back-to-edit button (mobile only) */}
 				<button
 					onClick={() => setShowPreview(false)}
-					className="md:hidden absolute top-6 left-6 z-50 p-3 bg-white rounded-full shadow-lg"
+					className="md:hidden absolute top-4 left-4 z-50 flex items-center gap-1.5 px-4 py-2 text-sm font-sans font-medium border shadow-sm"
+					style={{ background: C.white, borderColor: C.border, color: C.black }}
 				>
-					<Edit3 className="w-6 h-6" />
+					<Edit3 className="w-3.5 h-3.5" /> Edit
 				</button>
 
-				{/* Centering wrapper — gives the scaled phone its layout space */}
-				<div className="w-full min-h-full flex items-start justify-center py-10 px-8">
-					{/* Outer box reserves the scaled space so the panel scrolls correctly */}
+				{/* Panel label */}
+				<div
+					className="hidden md:flex items-center justify-between px-8 pt-5 pb-3 border-b"
+					style={{ borderColor: C.border }}
+				>
+					<span
+						className="font-sans font-medium uppercase tracking-widest"
+						style={{ fontSize: "0.65rem", color: C.grey }}
+					>
+						Mobile Preview
+					</span>
+					<span
+						className="font-mono text-xs"
+						style={{ color: C.border }}
+					>
+						390 × 844
+					</span>
+				</div>
+
+				{/* Centering wrapper */}
+				<div className="flex-1 flex items-center justify-center px-8 pb-8 overflow-hidden">
 					<div
+						aria-hidden
 						style={{
-							width: 390 * phoneScale,
-							height: 780 * phoneScale,
+							width: (PHONE_W + PHONE_BORDER * 2) * phoneScale,
+							height: (PHONE_H + PHONE_BORDER * 2) * phoneScale,
 							flexShrink: 0,
+							position: "relative",
 						}}
 					>
-						{/* Phone shell — rendered at full 390×780, then scaled down */}
+						{/* Phone shell */}
 						<div
-							className="relative shadow-2xl rounded-[2.8rem]"
+							className="relative"
 							style={{
-								width: 390,
-								height: 780,
-								border: "12px solid #111827",
-								background: "#111827",
+								width: PHONE_W + PHONE_BORDER * 2,
+								height: PHONE_H + PHONE_BORDER * 2,
+								borderRadius: 48,
+								background: "#18181B",
+								boxShadow: "0 24px 64px rgba(0,0,0,0.25)",
 								transform: `scale(${phoneScale})`,
 								transformOrigin: "top left",
+								position: "absolute",
+								top: 0,
+								left: 0,
 							}}
 						>
-							{/* Notch */}
+							{/* Side buttons */}
+							<div className="absolute -right-[5px] top-28 w-[5px] h-16 rounded-r-sm" style={{ background: "#27272A" }} />
+							<div className="absolute -left-[5px] top-20 w-[5px] h-8 rounded-l-sm" style={{ background: "#27272A" }} />
+							<div className="absolute -left-[5px] top-32 w-[5px] h-8 rounded-l-sm" style={{ background: "#27272A" }} />
+
+							{/* Screen area */}
 							<div
-								className="absolute top-0 left-1/2 -translate-x-1/2 z-10 bg-[#111827] rounded-b-2xl"
-								style={{ width: 100, height: 28 }}
-							/>
-							{/* Scrollable screen content */}
-							<div
-								className="w-full h-full rounded-4xl overflow-y-auto overflow-x-hidden"
-								style={{ background: "#fff" }}
+								style={{
+									position: "absolute",
+									inset: PHONE_BORDER,
+									borderRadius: 36,
+									overflow: "hidden",
+									background: "#fff",
+								}}
 							>
-								<WeddingPageView wedding={formData} isPreview />
+								{/* Dynamic Island */}
+								<div
+									style={{
+										position: "absolute",
+										top: 12,
+										left: "50%",
+										transform: "translateX(-50%)",
+										width: 120,
+										height: 34,
+										background: "#18181B",
+										borderRadius: 20,
+										zIndex: 20,
+									}}
+								/>
+
+								{/* Scrollable content */}
+								<div className="w-full h-full overflow-y-auto overflow-x-hidden">
+									<WeddingPageView wedding={formData} isPreview />
+								</div>
 							</div>
 						</div>
 					</div>
