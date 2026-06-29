@@ -82,6 +82,15 @@ const fadeUp = {
 };
 
 /* ══════════════════════════════════════════════════════════════════════════ */
+const DEFAULT_WA_NUMBER = "6288987135615";
+
+/** Strip non-digit chars; return null if fewer than 8 digits remain */
+function sanitizeWaNumber(raw?: string): string | null {
+	if (!raw) return null;
+	const digits = raw.replace(/\D/g, "");
+	return digits.length >= 8 ? digits : null;
+}
+
 export default function WeddingPageView({
 	wedding,
 	isPreview = false,
@@ -97,6 +106,9 @@ export default function WeddingPageView({
 			: wedding.fontStyle === "script"
 				? "font-script"
 				: "font-sans";
+
+	const waNumber =
+		sanitizeWaNumber(wedding.whatsappNumber) ?? DEFAULT_WA_NUMBER;
 
 	const waMessage = inviteeName
 		? `Halo Kak, saya ${inviteeName} ingin konfirmasi kehadiran di pernikahan ${wedding.brideName} & ${wedding.groomName}`
@@ -647,7 +659,7 @@ export default function WeddingPageView({
 						{!isPreview ? (
 							<motion.a
 								id="wa-rsvp-btn"
-								href={`https://wa.me/6288987135615?text=${encodeURIComponent(waMessage)}`}
+								href={`https://wa.me/${waNumber}?text=${encodeURIComponent(waMessage)}`}
 								target="_blank"
 								rel="noreferrer"
 								className={`inline-flex items-center justify-center gap-3 w-full font-semibold font-sans transition-all ${S.btnPx} ${theme.button}`}

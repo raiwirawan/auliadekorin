@@ -46,6 +46,7 @@ db.exec(`
     show_countdown INTEGER DEFAULT 1,
     rsvp_deadline TEXT,
     hero_image TEXT,
+    whatsapp_number TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id)
   );
@@ -68,6 +69,9 @@ try {
 } catch (_) { /* column already exists */ }
 try {
   db.exec(`ALTER TABLE weddings ADD COLUMN is_published INTEGER DEFAULT 1;`);
+} catch (_) { /* column already exists */ }
+try {
+  db.exec(`ALTER TABLE weddings ADD COLUMN whatsapp_number TEXT;`);
 } catch (_) { /* column already exists */ }
 
 // ─── Auth Middleware ───────────────────────────────────────────────────────────
@@ -160,7 +164,7 @@ async function startServer() {
       const {
         brideName, groomName, date, time, venueName, venueAddress,
         venueMapsUrl, tagline, loveStory, theme, fontStyle,
-        musicId, showCountdown, rsvpDeadline, heroImage, customSlug
+        musicId, showCountdown, rsvpDeadline, heroImage, customSlug, whatsappNumber
       } = req.body;
 
       // Determine the slug
@@ -182,15 +186,16 @@ async function startServer() {
           slug, user_id, is_published,
           bride_name, groom_name, date, time, venue_name, venue_address,
           venue_maps_url, tagline, love_story, theme, font_style,
-          music_id, show_countdown, rsvp_deadline, hero_image
-        ) VALUES (?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          music_id, show_countdown, rsvp_deadline, hero_image, whatsapp_number
+        ) VALUES (?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
 
       const result = stmt.run(
         slug, req.userId,
         brideName, groomName, date, time, venueName, venueAddress,
         venueMapsUrl, tagline, loveStory, theme, fontStyle,
-        musicId, showCountdown ? 1 : 0, rsvpDeadline, heroImage
+        musicId, showCountdown ? 1 : 0, rsvpDeadline, heroImage,
+        whatsappNumber || null
       );
 
       res.json({ success: true, slug, id: result.lastInsertRowid });

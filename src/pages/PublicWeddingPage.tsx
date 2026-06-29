@@ -58,6 +58,7 @@ export default function PublicWeddingPage() {
           showCountdown: data.show_countdown,
           rsvpDeadline: data.rsvp_deadline,
           heroImage: data.hero_image,
+          whatsappNumber: data.whatsapp_number ?? undefined,
         });
       } catch {
         setError(true);
