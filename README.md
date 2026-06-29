@@ -1,10 +1,10 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="./src/assets/images/everlasting-eta.vercel.app_.png" />
+<img width="1200" height="475" alt="GHBanner" src="./public/auliadekorin.vercel.app.webp" />
 </div>
 
 ## Deployment
 
-This project is deployed at https://everlasting-eta.vercel.app/
+This project is deployed at https://auliadekorin.vercel.app/
 
 ## Run Locally
 
