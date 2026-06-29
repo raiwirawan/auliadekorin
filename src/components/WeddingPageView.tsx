@@ -647,7 +647,7 @@ export default function WeddingPageView({
 						{!isPreview ? (
 							<motion.a
 								id="wa-rsvp-btn"
-								href={`https://wa.me/6287126323423?text=${encodeURIComponent(waMessage)}`}
+								href={`https://wa.me/6288987135615?text=${encodeURIComponent(waMessage)}`}
 								target="_blank"
 								rel="noreferrer"
 								className={`inline-flex items-center justify-center gap-3 w-full font-semibold font-sans transition-all ${S.btnPx} ${theme.button}`}
