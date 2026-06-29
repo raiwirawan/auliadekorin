@@ -8,9 +8,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { format } from 'date-fns';
 
 interface WeddingPageViewProps {
-  wedding: Wedding;
-  isPreview?: boolean;
-  inviteeName?: string; // from ?to= URL param
+	wedding: Wedding;
+	isPreview?: boolean;
+	inviteeName?: string; // from ?to= URL param
 }
 
 export default function WeddingPageView({ wedding, isPreview = false, inviteeName }: WeddingPageViewProps) {

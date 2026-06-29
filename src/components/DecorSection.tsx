@@ -74,7 +74,7 @@ export default function DecorSection() {
 								siap mengantarkan langkah pertama Anda.
 							</p>
 							<a
-								href="https://wa.me/6288987135615?text=Halo%20kak%2C%20saya%20tertarik%20dengan%20konsep%20dekorasi%20Signature%20Grandeur"
+								href="https://wa.me/6281237042471?text=Halo%20kak%2C%20saya%20tertarik%20dengan%20konsep%20dekorasi%20Signature%20Grandeur"
 								target="_blank"
 								rel="noreferrer"
 								className="inline-flex items-center gap-2 text-amber-300 hover:text-white font-medium transition-colors w-max"
