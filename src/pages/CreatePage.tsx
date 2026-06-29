@@ -107,7 +107,8 @@ export default function CreatePage() {
 		const computeScale = () => {
 			const available = panel.clientWidth - PADDING;
 			const byWidth = available / (PHONE_W + PHONE_BORDER * 2);
-			const byHeight = (panel.clientHeight - 120) / (PHONE_H + PHONE_BORDER * 2);
+			const byHeight =
+				(panel.clientHeight - 120) / (PHONE_H + PHONE_BORDER * 2);
 			setPhoneScale(Math.min(1, byWidth, byHeight));
 		};
 		computeScale();
@@ -307,8 +308,14 @@ export default function CreatePage() {
 				className="min-h-screen flex items-center justify-center"
 				style={{ background: C.beige }}
 			>
-				<div className="flex flex-col items-center gap-4" style={{ color: C.grey }}>
-					<Loader2 className="w-8 h-8 animate-spin" style={{ color: C.taupe }} />
+				<div
+					className="flex flex-col items-center gap-4"
+					style={{ color: C.grey }}
+				>
+					<Loader2
+						className="w-8 h-8 animate-spin"
+						style={{ color: C.taupe }}
+					/>
 					<span
 						className="font-sans uppercase tracking-widest"
 						style={{ fontSize: "0.7rem" }}
@@ -335,8 +342,14 @@ export default function CreatePage() {
 						boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
 					}}
 				>
-					<AlertTriangle className="w-8 h-8 mx-auto mb-4" style={{ color: C.taupe }} />
-					<p className="font-sans font-medium mb-6 text-sm" style={{ color: C.black }}>
+					<AlertTriangle
+						className="w-8 h-8 mx-auto mb-4"
+						style={{ color: C.taupe }}
+					/>
+					<p
+						className="font-sans font-medium mb-6 text-sm"
+						style={{ color: C.black }}
+					>
 						{loadError}
 					</p>
 					<button
@@ -372,7 +385,10 @@ export default function CreatePage() {
 					{/* Success icon */}
 					<div
 						className="w-14 h-14 flex items-center justify-center mx-auto mb-6"
-						style={{ background: `${C.taupe}15`, border: `1px solid ${C.taupe}40` }}
+						style={{
+							background: `${C.taupe}15`,
+							border: `1px solid ${C.taupe}40`,
+						}}
 					>
 						<CheckCircle className="w-7 h-7" style={{ color: C.taupe }} />
 					</div>
@@ -389,7 +405,10 @@ export default function CreatePage() {
 					>
 						{isEditMode ? "Changes Saved" : "Your Page is Live"}
 					</h1>
-					<p className="text-sm font-sans leading-relaxed mb-8" style={{ color: C.grey }}>
+					<p
+						className="text-sm font-sans leading-relaxed mb-8"
+						style={{ color: C.grey }}
+					>
 						{isEditMode
 							? "Your wedding page has been updated successfully."
 							: "Your personalized wedding invitation is ready to share."}
@@ -473,7 +492,11 @@ export default function CreatePage() {
 				>
 					<div className="flex items-center gap-3">
 						<div className="w-9 h-9 flex items-center justify-center overflow-hidden">
-							<img src="/aulia_dekorin_logo.png" alt="AuliaDekorin Logo" className="w-full h-full object-contain" />
+							<img
+								src="/aulia_dekorin_logo.png"
+								alt="AuliaDekorin Logo"
+								className="w-full h-full object-contain"
+							/>
 						</div>
 						<span
 							className="font-bold tracking-tight text-lg"
@@ -505,10 +528,7 @@ export default function CreatePage() {
 							<Eye className="w-3.5 h-3.5" /> Preview
 						</button>
 						<StepDots total={4} current={step} />
-						<span
-							className="font-sans text-xs"
-							style={{ color: C.grey }}
-						>
+						<span className="font-sans text-xs" style={{ color: C.grey }}>
 							{step} / 4
 						</span>
 					</div>
@@ -616,7 +636,9 @@ export default function CreatePage() {
 										/>
 									</div>
 									<div>
-										<FieldLabel htmlFor="venueAddress">Venue Address</FieldLabel>
+										<FieldLabel htmlFor="venueAddress">
+											Venue Address
+										</FieldLabel>
 										<input
 											id="venueAddress"
 											type="text"
@@ -689,7 +711,9 @@ export default function CreatePage() {
 
 								<div className="space-y-5">
 									<div>
-										<FieldLabel htmlFor="tagline">Tagline / Subtitle</FieldLabel>
+										<FieldLabel htmlFor="tagline">
+											Tagline / Subtitle
+										</FieldLabel>
 										<input
 											id="tagline"
 											type="text"
@@ -721,13 +745,19 @@ export default function CreatePage() {
 										<FieldLabel>Hero Image</FieldLabel>
 
 										{/* Mode toggle */}
-										<div className="flex gap-0 border" style={{ borderColor: C.border }}>
+										<div
+											className="flex gap-0 border"
+											style={{ borderColor: C.border }}
+										>
 											<button
 												type="button"
 												onClick={() => setHeroInputMode("upload")}
 												className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-sans font-medium uppercase tracking-wider transition-all"
 												style={{
-													background: heroInputMode === "upload" ? C.black : "transparent",
+													background:
+														heroInputMode === "upload"
+															? C.black
+															: "transparent",
 													color: heroInputMode === "upload" ? C.white : C.grey,
 												}}
 											>
@@ -739,7 +769,8 @@ export default function CreatePage() {
 												className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-sans font-medium uppercase tracking-wider transition-all border-l"
 												style={{
 													borderColor: C.border,
-													background: heroInputMode === "url" ? C.black : "transparent",
+													background:
+														heroInputMode === "url" ? C.black : "transparent",
 													color: heroInputMode === "url" ? C.white : C.grey,
 												}}
 											>
@@ -773,7 +804,10 @@ export default function CreatePage() {
 														</>
 													) : (
 														<>
-															<Upload className="w-7 h-7" style={{ color: C.grey }} />
+															<Upload
+																className="w-7 h-7"
+																style={{ color: C.grey }}
+															/>
 															<div className="text-center">
 																<span
 																	className="text-sm font-sans font-medium block"
@@ -836,7 +870,10 @@ export default function CreatePage() {
 										)}
 
 										{formData.heroImage && (
-											<div className="relative border overflow-hidden" style={{ borderColor: C.border }}>
+											<div
+												className="relative border overflow-hidden"
+												style={{ borderColor: C.border }}
+											>
 												<img
 													src={formData.heroImage}
 													alt="Hero preview"
@@ -855,11 +892,9 @@ export default function CreatePage() {
 											</div>
 										)}
 
-										<p
-											className="text-xs font-sans"
-											style={{ color: C.grey }}
-										>
-											Tip: Use a high-quality landscape photo for the best result.
+										<p className="text-xs font-sans" style={{ color: C.grey }}>
+											Tip: Use a high-quality landscape photo for the best
+											result.
 										</p>
 									</div>
 								</div>
@@ -911,7 +946,9 @@ export default function CreatePage() {
 															borderColor:
 																formData.theme === t ? C.taupe : C.border,
 															background:
-																formData.theme === t ? `${C.taupe}08` : "transparent",
+																formData.theme === t
+																	? `${C.taupe}08`
+																	: "transparent",
 														}}
 													>
 														<div
@@ -933,7 +970,10 @@ export default function CreatePage() {
 									{/* Font style */}
 									<div className="space-y-4">
 										<FieldLabel>Font Style</FieldLabel>
-										<div className="flex gap-0 border" style={{ borderColor: C.border }}>
+										<div
+											className="flex gap-0 border"
+											style={{ borderColor: C.border }}
+										>
 											{["serif", "script", "sans"].map((f, i) => (
 												<button
 													key={f}
@@ -944,7 +984,9 @@ export default function CreatePage() {
 													style={{
 														borderColor: C.border,
 														background:
-															formData.fontStyle === f ? C.black : "transparent",
+															formData.fontStyle === f
+																? C.black
+																: "transparent",
 														color: formData.fontStyle === f ? C.white : C.grey,
 													}}
 												>
@@ -960,7 +1002,9 @@ export default function CreatePage() {
 
 									{/* Background music */}
 									<div>
-										<FieldLabel htmlFor="musicSelect">Background Music</FieldLabel>
+										<FieldLabel htmlFor="musicSelect">
+											Background Music
+										</FieldLabel>
 										<select
 											id="musicSelect"
 											className={inputCls}
@@ -1047,14 +1091,16 @@ export default function CreatePage() {
 											<div
 												className="absolute top-1 w-4 h-4 bg-white transition-all"
 												style={{
-													left: formData.showCountdown ? "calc(100% - 20px)" : 4,
+													left: formData.showCountdown
+														? "calc(100% - 20px)"
+														: 4,
 												}}
 											/>
 										</button>
 									</div>
 
 									{/* RSVP deadline */}
-									<div>
+									{/* <div>
 										<FieldLabel htmlFor="rsvpDeadline">RSVP Deadline</FieldLabel>
 										<input
 											id="rsvpDeadline"
@@ -1068,7 +1114,7 @@ export default function CreatePage() {
 												})
 											}
 										/>
-									</div>
+									</div> */}
 
 									{/* Custom slug (new) */}
 									{!isEditMode && (
@@ -1115,7 +1161,8 @@ export default function CreatePage() {
 												className="text-xs font-sans mt-1.5"
 												style={{ color: C.grey }}
 											>
-												Leave blank to auto-generate. Lowercase, numbers, hyphens only.
+												Leave blank to auto-generate. Lowercase, numbers,
+												hyphens only.
 											</p>
 										</div>
 									)}
@@ -1243,10 +1290,7 @@ export default function CreatePage() {
 					>
 						Mobile Preview
 					</span>
-					<span
-						className="font-mono text-xs"
-						style={{ color: C.border }}
-					>
+					<span className="font-mono text-xs" style={{ color: C.border }}>
 						390 × 844
 					</span>
 				</div>
@@ -1279,9 +1323,18 @@ export default function CreatePage() {
 							}}
 						>
 							{/* Side buttons */}
-							<div className="absolute -right-[5px] top-28 w-[5px] h-16 rounded-r-sm" style={{ background: "#27272A" }} />
-							<div className="absolute -left-[5px] top-20 w-[5px] h-8 rounded-l-sm" style={{ background: "#27272A" }} />
-							<div className="absolute -left-[5px] top-32 w-[5px] h-8 rounded-l-sm" style={{ background: "#27272A" }} />
+							<div
+								className="absolute -right-[5px] top-28 w-[5px] h-16 rounded-r-sm"
+								style={{ background: "#27272A" }}
+							/>
+							<div
+								className="absolute -left-[5px] top-20 w-[5px] h-8 rounded-l-sm"
+								style={{ background: "#27272A" }}
+							/>
+							<div
+								className="absolute -left-[5px] top-32 w-[5px] h-8 rounded-l-sm"
+								style={{ background: "#27272A" }}
+							/>
 
 							{/* Screen area */}
 							<div
