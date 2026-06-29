@@ -23,15 +23,7 @@ export interface Wedding {
   showCountdown: boolean;
   rsvpDeadline: string;
   heroImage: string;
-}
-
-export interface RSVP {
-  id?: string;
-  weddingId: string;
-  name: string;
-  status: 'attending' | 'declined';
-  guests: number;
-  message: string;
+  whatsappNumber?: string;
 }
 
 export const THEMES = {

@@ -146,6 +146,7 @@ export default function CreatePage() {
 					showCountdown: data.show_countdown ?? true,
 					rsvpDeadline: data.rsvp_deadline ?? "",
 					heroImage: data.hero_image ?? "",
+					whatsappNumber: data.whatsapp_number ?? "",
 					id: data.id,
 					slug: data.slug,
 					user_id: data.user_id,
@@ -200,6 +201,7 @@ export default function CreatePage() {
 		showCountdown: true,
 		rsvpDeadline: "",
 		heroImage: "",
+		whatsappNumber: "",
 	});
 
 	const handlePublish = async () => {
@@ -226,6 +228,7 @@ export default function CreatePage() {
 						show_countdown: formData.showCountdown,
 						rsvp_deadline: formData.rsvpDeadline,
 						hero_image: formData.heroImage,
+						whatsapp_number: formData.whatsappNumber || null,
 					})
 					.eq("id", editId)
 					.eq("user_id", user.id);
@@ -281,6 +284,7 @@ export default function CreatePage() {
 					show_countdown: formData.showCountdown,
 					rsvp_deadline: formData.rsvpDeadline,
 					hero_image: formData.heroImage,
+					whatsapp_number: formData.whatsappNumber || null,
 				});
 
 				if (dbError) throw new Error(dbError.message);
@@ -1099,22 +1103,42 @@ export default function CreatePage() {
 										</button>
 									</div>
 
-									{/* RSVP deadline */}
-									{/* <div>
-										<FieldLabel htmlFor="rsvpDeadline">RSVP Deadline</FieldLabel>
+									{/* RSVP deadline (commented out) */}
+									{/* <div>...</div> */}
+
+									{/* WhatsApp Reservation Number */}
+									<div>
+										<FieldLabel htmlFor="whatsappNumber">
+											WhatsApp Reservation Number{" "}
+											<span
+												className="normal-case"
+												style={{ color: C.border, fontWeight: 400 }}
+											>
+												(optional)
+											</span>
+										</FieldLabel>
 										<input
-											id="rsvpDeadline"
-											type="date"
+											id="whatsappNumber"
+											type="tel"
+											placeholder="e.g. 6281234567890"
 											className={inputCls}
-											value={formData.rsvpDeadline}
+											value={formData.whatsappNumber ?? ""}
 											onChange={(e) =>
 												setFormData({
 													...formData,
-													rsvpDeadline: e.target.value,
+													whatsappNumber: e.target.value,
 												})
 											}
 										/>
-									</div> */}
+										<p
+											className="text-xs font-sans mt-1.5"
+											style={{ color: C.grey }}
+										>
+											Nomor WA untuk tombol konfirmasi. Contoh:{" "}
+											<code style={{ fontSize: "0.7rem" }}>6281234567890</code>.
+											Kosongkan untuk pakai nomor default AuliaDekorin.
+										</p>
+									</div>
 
 									{/* Custom slug (new) */}
 									{!isEditMode && (
